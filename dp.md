@@ -54,8 +54,9 @@ Street B: [3, 2, 6, 8, 2]
 - [Pattern 4: String DP](#pattern-4-string-dp)
 - [Pattern 5: State Machine DP](#pattern-5-state-machine-dp)
 - [Pattern 6: Interval DP](#pattern-6-interval-dp)
-- [Pattern 7: Grid DP](#pattern-7-grid-dp)
-- [Pattern 8: Tree DP](#pattern-8-tree-dp)
+- [Pattern 7: Game Theory DP (Minimax)](#pattern-7-game-theory-dp-minimax)
+- [Pattern 8: Grid DP](#pattern-8-grid-dp)
+- [Pattern 9: Tree DP](#pattern-9-tree-dp)
 - [Misc / Must-Do](#misc--must-do-dp-problems)
 
 ---
@@ -396,24 +397,24 @@ s2 = "ace"
 
 ### Recurrence
 
-State `f(i, j)` = LCS length of `s1[i:]` and `s2[j:]`:
+State `f(i, j)` = LCS length of the prefixes `s1[:i]` and `s2[:j]` (first `i` chars of `s1`, first `j` chars of `s2`):
 
 ```
-f(i, j) = 1 + f(i+1, j+1)              if s1[i] == s2[j]
-        = max(f(i+1, j), f(i, j+1))    otherwise
-f(i, j) = 0  if i == n or j == m
+f(i, j) = 1 + f(i-1, j-1)              if s1[i-1] == s2[j-1]
+        = max(f(i-1, j), f(i, j-1))    otherwise
+f(i, j) = 0  if i == 0 or j == 0
 ```
 
-Match → consume both. Mismatch → drop one character from either side, take the best.
+Match → consume both. Mismatch → drop one character from either side, take the best. The answer is `f(n, m)`.
 
 ### Recursion — O(2^(n+m))
 
 ```python
 def f(i, j):
-    if i == n or j == m: return 0
-    if s1[i] == s2[j]:
-        return 1 + f(i+1, j+1)
-    return max(f(i+1, j), f(i, j+1))
+    if i == 0 or j == 0: return 0
+    if s1[i-1] == s2[j-1]:
+        return 1 + f(i-1, j-1)
+    return max(f(i-1, j), f(i, j-1))
 ```
 
 ### Memoization — O(n·m) time and space
@@ -421,28 +422,31 @@ def f(i, j):
 ```python
 memo = {}
 def f(i, j):
-    if i == n or j == m: return 0
+    if i == 0 or j == 0: return 0
     if (i, j) in memo: return memo[(i, j)]
-    if s1[i] == s2[j]:
-        memo[(i, j)] = 1 + f(i+1, j+1)
+    if s1[i-1] == s2[j-1]:
+        memo[(i, j)] = 1 + f(i-1, j-1)
     else:
-        memo[(i, j)] = max(f(i+1, j), f(i, j+1))
+        memo[(i, j)] = max(f(i-1, j), f(i, j-1))
     return memo[(i, j)]
 ```
 
 ### Tabulation — O(n·m) time, O(n·m) space
 
-`dp[i][j]` = LCS of `s1[i:]` and `s2[j:]`. Fill bottom-up from `i = n`, `j = m`.
+`dp[i][j]` = LCS of the prefixes `s1[:i]` and `s2[:j]`. Fill from `i = 1, j = 1` upward; row/col `0` are the empty-prefix base cases.
 
 ```python
-dp = [[0] * (m + 1) for _ in range(n + 1)]
-for i in range(n - 1, -1, -1):
-    for j in range(m - 1, -1, -1):
-        if s1[i] == s2[j]:
-            dp[i][j] = 1 + dp[i+1][j+1]
-        else:
-            dp[i][j] = max(dp[i+1][j], dp[i][j+1])
-return dp[0][0]
+    n, m = len(text1), len(text2)
+    dp = [[0]*(m+1) for _ in range(n+1)]
+    
+    for i in range(1, n+1):
+        for j in range(1, m+1):
+            if text1[i-1] == text2[j-1]:
+                dp[i][j] = 1 + dp[i-1][j-1]
+            else:
+                dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+        
+    return dp[n][m]
 ```
 
 ### Space-optimized — O(n·m) time, O(m) space
@@ -450,32 +454,35 @@ return dp[0][0]
 Each row depends only on the row below (`dp[i+1]`) plus one already-computed cell to the right in the current row. Keep two rows.
 
 ```python
-nxt = [0] * (m + 1)
-for i in range(n - 1, -1, -1):
-    cur = [0] * (m + 1)
-    for j in range(m - 1, -1, -1):
-        if s1[i] == s2[j]:
-            cur[j] = 1 + nxt[j+1]
-        else:
-            cur[j] = max(nxt[j], cur[j+1])
-    nxt = cur
-return nxt[0]
+    n, m = len(text1), len(text2)
+    prev = [0]*(m+1)
+    
+    for i in range(1, n+1):
+        curr = [0]*(m+1)
+        for j in range(1, m+1):
+            if text1[i-1] == text2[j-1]:
+                curr[j] = 1 + prev[j-1]
+            else:
+                curr[j] = max(prev[j], curr[j-1])
+        prev = curr
+
+    return prev[m]
 ```
 
 ### Reconstructing the LCS
 
-Walk the `dp` table from `(0, 0)`: on match, take the char and step to `(i+1, j+1)`; otherwise move toward the larger of `dp[i+1][j]` / `dp[i][j+1]`.
+Walk the `dp` table backward from `(n, m)`: on match, take the char and step to `(i-1, j-1)`; otherwise move toward the larger of `dp[i-1][j]` / `dp[i][j-1]`. Reverse at the end since we collect from the back.
 
 ```python
-i, j, out = 0, 0, []
-while i < n and j < m:
-    if s1[i] == s2[j]:
-        out.append(s1[i]); i += 1; j += 1
-    elif dp[i+1][j] >= dp[i][j+1]:
-        i += 1
+i, j, out = n, m, []
+while i > 0 and j > 0:
+    if s1[i-1] == s2[j-1]:
+        out.append(s1[i-1]); i -= 1; j -= 1
+    elif dp[i-1][j] >= dp[i][j-1]:
+        i -= 1
     else:
-        j += 1
-return "".join(out)
+        j -= 1
+return "".join(reversed(out))
 ```
 
 ### Pattern
@@ -663,45 +670,43 @@ State = `(index, current_state)`. Transitions are the state-machine edges; recur
 
 ## Pattern 6: Interval DP
 
-**Why this pattern matters:** The subproblem is always a contiguous range `[i, j]`. You split it at some pivot `k` and combine the two sub-intervals. The trick is always in **how** you split — either by finding the optimal cut, or by asking what happens last.
+**The idea:** the subproblem is a contiguous range `[i, j]`. To solve it you choose a **partition point** `k` inside the range, solve the two pieces independently, and combine them. Because every range depends only on **shorter** ranges, you solve small intervals first and build up.
 
-**Evaluation order:** always fill by increasing length — shorter intervals first, so `dp[i][j]` can rely on all smaller intervals already being solved.
-
-```python
-for length in range(2, n + 1):
-    for i in range(n - length + 1):
-        j = i + length - 1
-        for k in range(i, j):          # try every split point
-            dp[i][j] = min(dp[i][j], dp[i][k] + dp[k+1][j] + cost(i, k, j))
 ```
+solve(i, j):
+    if base case: return ...
+    best = optimum over all k in [i, j) of:
+              solve(i, k) + solve(k+1, j) + cost_of_combining
+    return best
+```
+
+Two things change from problem to problem: **what the partition `k` means** (a split position, the last element removed, the root of a tree...) and **the combine cost**. Everything else is boilerplate.
+
+> **Evaluation order (tabulation):** fill by increasing interval length, so all shorter intervals are ready when you need them.
 
 ---
 
-### Sub-pattern A: Merge cost (split into two halves)
+### Worked example: Matrix Chain Multiplication
 
-**Idea:** To solve `[i, j]`, pick a split point `k`. Pay the cost of solving the left half `[i, k]` and right half `[k+1, j]` independently, plus a merge cost to combine them. Try all `k` and take the minimum.
+**Problem:** You have `n` matrices to multiply in order. Matrix `i` has shape `dims[i] x dims[i+1]`. Matrix multiplication is associative — the *result* is the same regardless of how you parenthesise — but the *cost* differs. Find the cheapest parenthesisation.
 
-**Canonical: Matrix Chain Multiplication**
+Multiplying A(10×30), B(30×5), C(5×60):
+- `(AB)C` → 10·30·5 + 10·5·60 = **4500**
+- `A(BC)` → 30·5·60 + 10·30·60 = **27000**
 
-Given n matrices, `dims[i] x dims[i+1]` is the shape of matrix `i`. Find minimum cost to multiply the entire chain.
+Here `k` = where the chain splits. `solve(i, j)` = min cost to multiply matrices `i..j`. Splitting at `k` produces one matrix of shape `dims[i] x dims[k+1]` and another of `dims[k+1] x dims[j+1]`; combining them costs `dims[i] * dims[k+1] * dims[j+1]`.
 
-Two ways to multiply A(10×30), B(30×5), C(5×60):
-- `(AB)C` → 10×30×5 + 10×5×60 = **4500**
-- `A(BC)` → 30×5×60 + 10×30×60 = **27000**
-
-Split point `k` decides where the chain breaks.
-
-### Recursion — O(n! in worst case)
+### Recursion
 
 ```python
 def f(i, j):
-    if i == j:
+    if i == j:                       # single matrix, nothing to multiply
         return 0
-    res = float('inf')
-    for k in range(i, j):
+    best = float('inf')
+    for k in range(i, j):            # split between k and k+1
         cost = f(i, k) + f(k+1, j) + dims[i] * dims[k+1] * dims[j+1]
-        res = min(res, cost)
-    return res
+        best = min(best, cost)
+    return best
 ```
 
 ### Memoization — O(n³) time, O(n²) space
@@ -713,170 +718,136 @@ def f(i, j):
         return 0
     if (i, j) in memo:
         return memo[(i, j)]
-    res = float('inf')
+    best = float('inf')
     for k in range(i, j):
         cost = f(i, k) + f(k+1, j) + dims[i] * dims[k+1] * dims[j+1]
-        res = min(res, cost)
-    memo[(i, j)] = res
-    return res
+        best = min(best, cost)
+    memo[(i, j)] = best
+    return best
 ```
 
 ### Tabulation — O(n³) time, O(n²) space
 
 ```python
 dp = [[0] * n for _ in range(n)]
-
-for length in range(2, n + 1):
+for length in range(2, n + 1):           # interval length
     for i in range(n - length + 1):
         j = i + length - 1
         dp[i][j] = float('inf')
         for k in range(i, j):
             cost = dp[i][k] + dp[k+1][j] + dims[i] * dims[k+1] * dims[j+1]
             dp[i][j] = min(dp[i][j], cost)
-```
-
-**Problems:**
-- [Minimum Cost to Merge Stones](https://leetcode.com/problems/minimum-cost-to-merge-stones/)
-- [Minimum Cost Tree From Leaf Values](https://leetcode.com/problems/minimum-cost-tree-from-leaf-values/)
-- [Strange Printer](https://leetcode.com/problems/strange-printer/)
-
----
-
-### Sub-pattern B: "Last operation" trick (think inside-out)
-
-**Idea:** For some problems, "what do I do first?" doesn't work because each choice reshapes the problem — bursting balloon A changes who B's neighbours are, so subproblems can't be split cleanly.
-
-**The fix:** ask **"what is the last thing done in `[i, j]`?"** The last operation always sees `i` and `j` as clean fixed boundaries, because everything else is already gone. This makes subproblems independent.
-
-**Canonical: Burst Balloons**
-
-`nums = [3, 1, 5, 8]`. Burst all balloons, earn `left * this * right` per burst. Pad with 1s on both ends. `dp[i][j]` = max coins from open interval `(i, j)` where `i` and `j` are boundaries (not burst).
-
-Recurrence: try each `k` as the **last** balloon burst in `(i, j)` — at that point its neighbours are exactly `i` and `j`.
-
-```
-dp[i][j] = max over k in (i+1, j):
-    dp[i][k] + nums[i] * nums[k] * nums[j] + dp[k][j]
-```
-
-### Recursion
-
-```python
-nums = [1] + nums + [1]
-n = len(nums)
-
-def f(i, j):
-    if j - i < 2:           # no balloons between i and j
-        return 0
-    res = 0
-    for k in range(i + 1, j):
-        coins = nums[i] * nums[k] * nums[j]
-        res = max(res, f(i, k) + coins + f(k, j))
-    return res
-```
-
-### Memoization — O(n³) time, O(n²) space
-
-```python
-memo = {}
-def f(i, j):
-    if j - i < 2:
-        return 0
-    if (i, j) in memo:
-        return memo[(i, j)]
-    res = 0
-    for k in range(i + 1, j):
-        coins = nums[i] * nums[k] * nums[j]
-        res = max(res, f(i, k) + coins + f(k, j))
-    memo[(i, j)] = res
-    return res
-```
-
-### Tabulation — O(n³) time, O(n²) space
-
-```python
-nums = [1] + nums + [1]
-n = len(nums)
-dp = [[0] * n for _ in range(n)]
-
-for length in range(2, n):
-    for i in range(n - length):
-        j = i + length
-        for k in range(i + 1, j):
-            dp[i][j] = max(dp[i][j],
-                           dp[i][k] + nums[i] * nums[k] * nums[j] + dp[k][j])
-
 return dp[0][n - 1]
 ```
 
-**Problems:**
-- [Burst Balloons](https://leetcode.com/problems/burst-balloons/)
-- [Minimum Score Triangulation of Polygon](https://leetcode.com/problems/minimum-score-triangulation-of-polygon/)
-- [Remove Boxes](https://leetcode.com/problems/remove-boxes/)
+---
+
+### Variant: the "last operation" trick (Burst Balloons)
+
+Sometimes splitting *forward* breaks down because each choice reshapes the problem — bursting a balloon changes its neighbours. The fix: let `k` be the **last** thing done in `[i, j]`. At that moment `i` and `j` are guaranteed to be its neighbours (everything between is gone), so the two sides become independent.
+
+```python
+# pad with 1s; dp[i][j] = max coins from the open interval (i, j)
+nums = [1] + nums + [1]
+n = len(nums)
+dp = [[0] * n for _ in range(n)]
+for length in range(2, n):
+    for i in range(n - length):
+        j = i + length
+        for k in range(i + 1, j):        # k = last balloon burst in (i, j)
+            dp[i][j] = max(dp[i][j],
+                           dp[i][k] + nums[i] * nums[k] * nums[j] + dp[k][j])
+return dp[0][n - 1]
+```
 
 ---
 
-### Sub-pattern C: Counting / combinatorics on intervals
+### Variant: Palindrome Partitioning II (min cuts)
 
-**Idea:** Count distinct structures (trees, expressions) that can be built from a range. Pick a split point `k`, then multiply left-count × right-count — structures on each side are independent.
+**Problem:** Partition string `s` so every part is a palindrome, using the **fewest cuts**.
 
-**Canonical: Unique BSTs**
-
-Pick `k` as root → `[1..k-1]` is left subtree, `[k+1..n]` is right subtree. Count = product of counts on each side, summed over all root choices.
-
-### Recursion
+Here the "interval" thinking is on prefixes: `cuts[i]` = min cuts for `s[:i]`. Precompute `isPal[a][b]` (itself an interval DP), then for each end `i` try every start `j` of the last palindrome piece.
 
 ```python
-def f(n):
-    if n <= 1:
-        return 1
-    res = 0
-    for k in range(1, n + 1):      # k is the root
-        res += f(k - 1) * f(n - k)
-    return res
+n = len(s)
+isPal = [[False] * n for _ in range(n)]
+for i in range(n - 1, -1, -1):
+    for j in range(i, n):
+        if s[i] == s[j] and (j - i < 2 or isPal[i+1][j-1]):
+            isPal[i][j] = True
+
+cuts = [0] * (n + 1)
+for i in range(1, n + 1):
+    cuts[i] = float('inf')
+    for j in range(i):
+        if isPal[j][i-1]:                 # s[j:i] is a palindrome
+            cuts[i] = min(cuts[i], (0 if j == 0 else cuts[j] + 1))
+return cuts[n]
 ```
 
-### Memoization — O(n²) time, O(n) space
+---
+
+### Variant: Egg Drop
+
+**Problem:** `k` eggs, `n` floors. Find the highest safe floor with the **minimum number of trials in the worst case**. Dropping an egg from a floor either breaks it (search below with one fewer egg) or not (search above with same eggs).
+
+`dp[e][f]` = min worst-case trials with `e` eggs and `f` floors. For each floor `x` you drop from, the worst case is `1 + max(broken, survived)`; minimise over `x`. (The naive split is O(k·n²); a binary-search-on-`x` or the "moves" reformulation makes it faster.)
 
 ```python
-memo = {}
-def f(n):
-    if n <= 1:
-        return 1
-    if n in memo:
-        return memo[n]
-    res = 0
-    for k in range(1, n + 1):
-        res += f(k - 1) * f(n - k)
-    memo[n] = res
-    return res
+def f(eggs, floors):
+    if floors == 0 or eggs == 1:
+        return floors
+    best = float('inf')
+    for x in range(1, floors + 1):
+        broke   = f(eggs - 1, x - 1)      # egg breaks → below
+        survive = f(eggs, floors - x)     # egg survives → above
+        best = min(best, 1 + max(broke, survive))
+    return best
 ```
 
-### Tabulation — O(n²) time, O(n) space
+---
 
-```python
-dp = [0] * (n + 1)
-dp[0] = dp[1] = 1
+### Recognition checklist
 
-for nodes in range(2, n + 1):
-    for k in range(1, nodes + 1):
-        dp[nodes] += dp[k - 1] * dp[nodes - k]
+- Subproblem is a **contiguous range** and depends only on strictly smaller ranges
+- You choose a **partition / split / last-element** inside the range and combine the pieces
+- Problem involves **merging, removing, cutting, or building** something over a range
 
-return dp[n]
-```
+### Complexity
 
-**Problems:**
+Standard interval DP is **O(n³) time, O(n²) space** — two loops for the interval `(i, j)`, one for the split `k`.
+
+### Practice problems
+
+- [Minimum Cost to Merge Stones](https://leetcode.com/problems/minimum-cost-to-merge-stones/)
+- [Minimum Cost Tree From Leaf Values](https://leetcode.com/problems/minimum-cost-tree-from-leaf-values/)
+- [Strange Printer](https://leetcode.com/problems/strange-printer/)
+- [Burst Balloons](https://leetcode.com/problems/burst-balloons/)
+- [Minimum Score Triangulation of Polygon](https://leetcode.com/problems/minimum-score-triangulation-of-polygon/)
+- [Remove Boxes](https://leetcode.com/problems/remove-boxes/)
+- [Palindrome Partitioning II](https://leetcode.com/problems/palindrome-partitioning-ii/)
+- [Super Egg Drop](https://leetcode.com/problems/super-egg-drop/)
 - [Unique Binary Search Trees](https://leetcode.com/problems/unique-binary-search-trees/)
-- [Unique Binary Search Trees II](https://leetcode.com/problems/unique-binary-search-trees-ii/)
 - [Different Ways to Add Parentheses](https://leetcode.com/problems/different-ways-to-add-parentheses/)
 
 ---
 
-### Sub-pattern D: Minimax / optimal game on intervals
+## Pattern 7: Game Theory DP (Minimax)
 
-**Idea:** Two players pick from the ends of `[i, j]`. `dp[i][j]` = best **score advantage** (my score − opponent's score) the current player can guarantee. If I pick `nums[i]`, my opponent plays optimally on `[i+1, j]` — their advantage becomes my deficit.
+**The idea:** two players alternate turns and **both play optimally**. The trick is to track the score from the **current player's** perspective at every state. Whatever the opponent gains on their turn is your loss, so you flip the sign as you recurse.
 
-**Canonical: Predict the Winner**
+`dp[i][j]` = best **score advantage** (my total − opponent's total) the player to move can guarantee on the interval `[i, j]`.
+
+### Worked example: Predict the Winner
+
+**Problem:** Players take turns taking a number from **either end** of `nums`. Both play to maximise their own total. Can player 1 win (or tie)?
+
+If I take `nums[i]`, the opponent then faces `[i+1, j]` and plays optimally — their guaranteed advantage there becomes *my* deficit. So I subtract the subproblem's result:
+
+```
+dp[i][j] = max(nums[i] - dp[i+1][j],   # take left end
+               nums[j] - dp[i][j-1])   # take right end
+```
 
 ### Recursion
 
@@ -884,11 +855,10 @@ return dp[n]
 def f(i, j):
     if i == j:
         return nums[i]
-    pick_left  = nums[i] - f(i + 1, j)
-    pick_right = nums[j] - f(i, j - 1)
-    return max(pick_left, pick_right)
+    return max(nums[i] - f(i + 1, j),
+               nums[j] - f(i, j - 1))
 
-return f(0, n - 1) >= 0
+return f(0, n - 1) >= 0                  # >= 0 means player 1 wins / ties
 ```
 
 ### Memoization — O(n²) time, O(n²) space
@@ -913,17 +883,16 @@ return f(0, n - 1) >= 0
 dp = [[0] * n for _ in range(n)]
 for i in range(n):
     dp[i][i] = nums[i]
-
 for length in range(2, n + 1):
     for i in range(n - length + 1):
         j = i + length - 1
         dp[i][j] = max(nums[i] - dp[i+1][j],
                        nums[j] - dp[i][j-1])
-
-return dp[0][n-1] >= 0
+return dp[0][n - 1] >= 0
 ```
 
-**Problems:**
+### Practice problems
+
 - [Predict the Winner](https://leetcode.com/problems/predict-the-winner/)
 - [Stone Game](https://leetcode.com/problems/stone-game/)
 - [Stone Game II](https://leetcode.com/problems/stone-game-ii/)
@@ -933,30 +902,7 @@ return dp[0][n-1] >= 0
 - [Guess Number Higher or Lower II](https://leetcode.com/problems/guess-number-higher-or-lower-ii/)
 - [Zuma Game](https://leetcode.com/problems/zuma-game/)
 
----
-
-### Complexity
-
-| Loops | Time | Space |
-|---|---|---|
-| 2 (length + start) | O(n²) | O(n²) |
-| 3 (length + start + split k) | O(n³) | O(n²) |
-| 4 (+ extra state) | O(n⁴) | O(n³) |
-
----
-
-### Recognition checklist
-
-- Subproblem is a **contiguous subarray or substring**
-- Optimal solution on `[i, j]` depends on solutions to strictly smaller intervals
-- You can identify a "split point" or a "last operation" inside the interval
-- Problem involves merging, removing, building, or playing a game over a range
-
-
-
-
-
-## Pattern 7: Grid DP
+## Pattern 8: Grid DP
 
 **Why this pattern matters:** 2D state space `(r, c)` with moves in fixed directions. Common in pathfinding, counting paths, min/max cost grids. Once you have the recurrence, the table fill is mechanical.
 
@@ -994,12 +940,24 @@ def f(r, c):
 
 ```python
 memo = {}
-def f(r, c):
-    if r == n or c == m: return float('inf')
-    if r == n - 1 and c == m - 1: return grid[r][c]
-    if (r, c) in memo: return memo[(r, c)]
-    memo[(r, c)] = grid[r][c] + min(f(r+1, c), f(r, c+1))
-    return memo[(r, c)]
+class Solution:
+    def minPathSum(self, grid: List[List[int]]) -> int:
+        def dfs(i, j):
+            if  0 <= i < n and 0 <= j < m:
+                if i == n-1 and j == m-1:
+                    return grid[i][j]
+                
+                if (i, j) in memo:
+                    return memo[(i, j)]
+            
+                memo[(i, j)] = grid[i][j] + min(dfs(i+1, j), dfs(i, j+1))
+                return memo[(i, j)]
+            
+            return float(inf)
+
+        memo = {}
+        n, m = len(grid), len(grid[0])
+        return dfs(0, 0)
 ```
 
 ### Tabulation — O(n·m) time, O(n·m) space
@@ -1007,25 +965,18 @@ def f(r, c):
 `dp[r][c]` = min path sum from `(r, c)` onward. Fill bottom-right to top-left.
 
 ```python
-dp = [[0] * m for _ in range(n)]
-dp[n - 1][m - 1] = grid[n - 1][m - 1]
+    n, m = len(grid), len(grid[0])
+    dp = [[float(inf)] * (m+1) for _ in range(n+1)]
+    dp[n-1][m-1] = grid[n - 1][m - 1]
 
-for r in range(n - 1, -1, -1):
-    for c in range(m - 1, -1, -1):
-        if r == n - 1 and c == m - 1:
-            continue
+    for r in range(n - 1, -1, -1):
+        for c in range(m - 1, -1, -1):
+            if r == n - 1 and c == m - 1:
+                continue
 
-        down = float('inf')
-        right = float('inf')
+            dp[r][c] = grid[r][c] + min(dp[r + 1][c], dp[r][c + 1])
 
-        if r + 1 < n:
-            down = dp[r + 1][c]
-        if c + 1 < m:
-            right = dp[r][c + 1]
-
-        dp[r][c] = grid[r][c] + min(down, right)
-
-return dp[0][0]
+    return dp[0][0]
 ```
 
 ### Space-optimized — O(n·m) time, O(m) space
@@ -1080,7 +1031,7 @@ State `(r, c)` + fixed move set (right/down, or 4-dir, etc.). Recurrence aggrega
 - [Triangle](https://leetcode.com/problems/triangle/)
 
 
-## Pattern 8: Tree DP
+## Pattern 9: Tree DP
 
 **Why this pattern matters:** The tree structure enforces a natural subproblem order — children before parents (post-order). Every node becomes a DP state, and you propagate answers bottom-up. The key skill is deciding **what to return from each node** so the parent has exactly what it needs.
 
