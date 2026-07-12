@@ -4,29 +4,28 @@ A graph is a nonlinear data structure consisting of nodes and edges.
 
 Quick Links
 
-- [Representation](#-representation)
-- [Traversal](#-traversal)
-    - [BFS](#-bfs)
-    - [DFS](#-dfs)
-- [Topological Sorting](#-topological-sorting)
-    - [Kahn's Algorithm (BFS + in-degree)](#-kahns-algorithm-bfs--in-degree)
-    - [DFS-based Topological Sort](#-dfs-based-topological-sort)
-- [Disjoint Set Union (DSU) / Union-Find](#-disjoint-set-union-dsu--union-find)
-- [Shortest Path Algorithms](#-shortest-path-algorithms)
-    - [BFS (unweighted)](#-bfs-unweighted-shortest-path)
-    - [Dijkstra (non-negative weights)](#-dijkstra-non-negative-weights)
-    - [Bellman-Ford (handles negative edges, detects negative cycles)](#-bellman-ford-handles-negative-edges-detects-negative-cycles)
-    - [Floyd-Warshall (all-pairs)](#-floyd-warshall-all-pairs)
-    - [DAG (topological order + relax)](#-dag-topological-order--relax)
-- [Cycle Detection](#-cycle-detection)
-- [Minimum Spanning Tree (MST)](#-minimum-spanning-tree-mst)
-    - [Kruskal (sort edges + Union-Find)](#-kruskal-sort-edges--union-find)
-    - [Prim (heap-based)](#-prim-heap-based)
-- [Strongly Connected Components](#-strongly-connected-components-kosarajus-algorithm)
-    - [Kosaraju's Algorithm](#-kosarajus-algorithm)
-    - [Bridges & Articulation Points](#-bridges--articulation-points)
-    - [Tarjan's Algorithm (SCC via low-link)](#-tarjans-algorithm-scc-via-low-link)
-- [Quick reference](#-quick-reference)
+- [Representation](#representation)
+- [Traversal](#traversal)
+    - [BFS](#bfs)
+    - [DFS](#dfs)
+- [Topological Sorting](#topological-sorting)
+    - [Kahn's Algorithm (BFS + in-degree)](#kahns-algorithm-bfs--in-degree)
+    - [DFS-based Topological Sort](#dfs-based-topological-sort)
+- [Disjoint Set Union (DSU) / Union-Find](#disjoint-set-union-dsu--union-find)
+- [Shortest Path Algorithms](#shortest-path-algorithms)
+    - [BFS (unweighted)](#bfs-unweighted-shortest-path)
+    - [Dijkstra (non-negative weights)](#dijkstra-non-negative-weights)
+    - [Bellman-Ford (handles negative edges, detects negative cycles)](#bellman-ford-handles-negative-edges-detects-negative-cycles)
+    - [Floyd-Warshall (all-pairs)](#floyd-warshall-all-pairs)
+    - [DAG (topological order + relax)](#dag-topological-order--relax)
+- [Cycle Detection](#cycle-detection)
+- [Minimum Spanning Tree (MST)](#minimum-spanning-tree-mst)
+    - [Kruskal (sort edges + Union-Find)](#kruskal-sort-edges--union-find)
+    - [Prim (heap-based)](#prim-heap-based)
+- [Strongly Connected Components (Kosaraju's)](#strongly-connected-components-kosarajus-algorithm)
+- [Bridges & Articulation Points](#bridges--articulation-points)
+- [Tarjan's Algorithm (SCC via low-link)](#tarjans-algorithm-scc-via-low-link)
+- [Quick reference](#quick-reference)
 
 
 
@@ -573,10 +572,10 @@ def has_cycle_dsu(n, edges):
 
 #### Directed graphs → it's just topological sort
 
-Directed cycle detection is the **same algorithm** as [Topological Sorting](#-topological-sorting) — no new code needed:
+Directed cycle detection is the **same algorithm** as [Topological Sorting](#topological-sorting) — no new code needed:
 
-- **DFS-based** — the 3-state (unvisited / on-stack / done) DFS already returns a cycle flag when it revisits an on-stack node (a back edge). See [DFS-based Topological Sort](#-dfs-based-topological-sort).
-- **Kahn's BFS** — if the topo order can't place every node (`len(topo_order) != n`), the leftover nodes form a cycle. See [Kahn's Algorithm](#-kahns-algorithm-bfs--in-degree).
+- **DFS-based** — the 3-state (unvisited / on-stack / done) DFS already returns a cycle flag when it revisits an on-stack node (a back edge). See [DFS-based Topological Sort](#dfs-based-topological-sort).
+- **Kahn's BFS** — if the topo order can't place every node (`len(topo_order) != n`), the leftover nodes form a cycle. See [Kahn's Algorithm](#kahns-algorithm-bfs--in-degree).
 
 ---
 
