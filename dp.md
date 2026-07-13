@@ -57,7 +57,8 @@ Street B: [3, 2, 6, 8, 2]
 - [Pattern 7: Game Theory DP (Minimax)](#pattern-7-game-theory-dp-minimax)
 - [Pattern 8: Grid DP](#pattern-8-grid-dp)
 - [Pattern 9: Tree DP](#pattern-9-tree-dp)
-- [Misc / Must-Do](#misc--must-do-dp-problems)
+- [Bitmask & Probability DP](#bitmask--probability-dp)
+- [Must-Do / FAANG DP Questions](#must-do--faang-dp-questions)
 
 ---
 ## Pattern 1: Linear DP (1D)
@@ -130,13 +131,8 @@ return next1
 Standard **Pick vs Not Pick** DP. State `f(i)`, choices = take/skip, recurrence `f(i) = max(nums[i] + f(i+2), f(i+1))`.
 
 **Practice problems:**
-- [Fibonacci Number](https://leetcode.com/problems/fibonacci-number/)
-- [House Robber](https://leetcode.com/problems/house-robber/)
-- [Climbing Stairs](https://leetcode.com/problems/climbing-stairs/)
-- [Min Cost Climbing Stairs](https://leetcode.com/problems/min-cost-climbing-stairs/)
-- [Word Break](https://leetcode.com/problems/word-break/)
-- [Decode Ways](https://leetcode.com/problems/decode-ways/)
-- [House Robber II](https://leetcode.com/problems/house-robber-ii/)
+- [House Robber](https://leetcode.com/problems/house-robber/) — pick vs skip; can't take two adjacent houses.
+- [Word Break](https://leetcode.com/problems/word-break/) — `dp[i]` = can `s[:i]` be segmented into dictionary words.
 
 ## Pattern 2: Longest Increasing Subsequence (LIS)
 
@@ -238,13 +234,8 @@ State `f(i, prev)`, choices = take/skip with order constraint `nums[i] > nums[pr
 
 **Practice problems:**
 
-- [Longest Increasing Subsequence](https://leetcode.com/problems/longest-increasing-subsequence/)
-- [Number of Longest Increasing Subsequence](https://leetcode.com/problems/number-of-longest-increasing-subsequence/)
-- [Longest String Chain](https://leetcode.com/problems/longest-string-chain/)
-- [Russian Doll Envelopes](https://leetcode.com/problems/russian-doll-envelopes/)
-- [Maximum Length of Pair Chain](https://leetcode.com/problems/maximum-length-of-pair-chain/)
-- [Find the Longest Valid Obstacle Course at Each Position](https://leetcode.com/problems/find-the-longest-valid-obstacle-course-at-each-position/)
-- [Arithmetic Slices II - Subsequence](https://leetcode.com/problems/arithmetic-slices-ii-subsequence/)
+- [Longest Increasing Subsequence](https://leetcode.com/problems/longest-increasing-subsequence/) — the template; O(n log n) via patience sorting.
+- [Russian Doll Envelopes](https://leetcode.com/problems/russian-doll-envelopes/) — sort by width, run LIS on height (2D LIS).
 
 
 ## Pattern 3: Knapsack (0/1, Unbounded, Bounded)
@@ -365,19 +356,11 @@ Same skeleton. Loop direction is the whole trick.
 
 **0/1 Knapsack** (each item used once):
 
-- [Partition Equal Subset Sum](https://leetcode.com/problems/partition-equal-subset-sum/)
-- [Target Sum](https://leetcode.com/problems/target-sum/)
-- [Last Stone Weight II](https://leetcode.com/problems/last-stone-weight-ii/)
-- [Ones and Zeroes](https://leetcode.com/problems/ones-and-zeroes/)
-- [Partition Array Into Two Arrays to Minimize Sum Difference](https://leetcode.com/problems/partition-array-into-two-arrays-to-minimize-sum-difference/)
+- [Partition Equal Subset Sum](https://leetcode.com/problems/partition-equal-subset-sum/) — 0/1 subset-sum: can a subset hit total/2?
 
 **Unbounded Knapsack** (items can be used multiple times):
 
-- [Coin Change](https://leetcode.com/problems/coin-change/)
-- [Coin Change 2](https://leetcode.com/problems/coin-change-2/)
-- [Combination Sum IV](https://leetcode.com/problems/combination-sum-iv/)
-- [Perfect Squares](https://leetcode.com/problems/perfect-squares/)
-- [Minimum Cost For Tickets](https://leetcode.com/problems/minimum-cost-for-tickets/)
+- [Coin Change](https://leetcode.com/problems/coin-change/) — min coins to make an amount; each coin reusable (forward loop).
 
 
 
@@ -491,21 +474,8 @@ State `f(i, j)` on two index pointers, branch on `s1[i] == s2[j]`. Most string D
 
 **Practice problems:**
 
-- [Longest Common Subsequence](https://leetcode.com/problems/longest-common-subsequence/)
-- [Edit Distance](https://leetcode.com/problems/edit-distance/)
-- [Delete Operation for Two Strings](https://leetcode.com/problems/delete-operation-for-two-strings/)
-- [Minimum ASCII Delete Sum for Two Strings](https://leetcode.com/problems/minimum-ascii-delete-sum-for-two-strings/)
-- [Shortest Common Supersequence](https://leetcode.com/problems/shortest-common-supersequence/)
-- [Longest Palindromic Subsequence](https://leetcode.com/problems/longest-palindromic-subsequence/)
-- [Longest Palindromic Substring](https://leetcode.com/problems/longest-palindromic-substring/)
-- [Palindromic Substrings](https://leetcode.com/problems/palindromic-substrings/)
-- [Regular Expression Matching](https://leetcode.com/problems/regular-expression-matching/)
-- [Wildcard Matching](https://leetcode.com/problems/wildcard-matching/)
-- [Distinct Subsequences](https://leetcode.com/problems/distinct-subsequences/)
-
-- [Distinct Subsequences II](https://leetcode.com/problems/distinct-subsequences-ii/)
-
-- [Number of Unique Good Subsequences](https://leetcode.com/problems/number-of-unique-good-subsequences/)
+- [Longest Common Subsequence](https://leetcode.com/problems/longest-common-subsequence/) — the 2D `(i, j)` template every other string-DP tweaks.
+- [Edit Distance](https://leetcode.com/problems/edit-distance/) — LCS-shaped with insert / delete / replace transitions.
 
 
 
@@ -617,53 +587,8 @@ State = `(index, current_state)`. Transitions are the state-machine edges; recur
 
 **Practice problems:**
 
-### Stock family (the canonical set)
-
-- [Best Time to Buy and Sell Stock](https://leetcode.com/problems/best-time-to-buy-and-sell-stock/)
-
-- [Best Time to Buy and Sell Stock II](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/)
-
-- [Best Time to Buy and Sell Stock III](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii/)
-
-- [Best Time to Buy and Sell Stock IV](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iv/)
-
-- [Best Time to Buy and Sell Stock with Cooldown](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/)
-
-- [Best Time to Buy and Sell Stock with Transaction Fee](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-transaction-fee/)
-
-- [Maximum Profit from Trading Stocks](https://leetcode.com/problems/maximum-profit-from-trading-stocks/)
-
-
-### Multi-actor / two-player state machines
-
-- [Cherry Pickup](https://leetcode.com/problems/cherry-pickup/)
-
-### Streaks / on-off / toggle states
-
-- [Maximum Alternating Subsequence Sum](https://leetcode.com/problems/maximum-alternating-subsequence-sum/)
-
-- [Minimum Swaps to Make Sequences Increasing](https://leetcode.com/problems/minimum-swaps-to-make-sequences-increasing/)
-
-- [Flip String to Monotone Increasing](https://leetcode.com/problems/flip-string-to-monotone-increasing/)
-
-- [Solving Questions With Brainpower](https://leetcode.com/problems/solving-questions-with-brainpower/)
-
-- [Knight Dialer](https://leetcode.com/problems/knight-dialer/)
-
-- [Student Attendance Record II](https://leetcode.com/problems/student-attendance-record-ii/)
-
-
-### Paint / sequence with adjacency constraint
-
-- [Paint House](https://leetcode.com/problems/paint-house/)
-
-- [Paint House II](https://leetcode.com/problems/paint-house-ii/)
-
-- [Paint House III](https://leetcode.com/problems/paint-house-iii/)
-
-- [Paint Fence](https://leetcode.com/problems/paint-fence/)
-
-- [Decode Ways II](https://leetcode.com/problems/decode-ways-ii/)
+- [Best Time to Buy and Sell Stock](https://leetcode.com/problems/best-time-to-buy-and-sell-stock/) — two states: holding / not holding.
+- [Best Time to Buy and Sell Stock IV](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iv/) — add a "transactions left" (k) dimension to the state.
 
 
 
@@ -819,16 +744,8 @@ Standard interval DP is **O(n³) time, O(n²) space** — two loops for the inte
 
 ### Practice problems
 
-- [Minimum Cost to Merge Stones](https://leetcode.com/problems/minimum-cost-to-merge-stones/)
-- [Minimum Cost Tree From Leaf Values](https://leetcode.com/problems/minimum-cost-tree-from-leaf-values/)
-- [Strange Printer](https://leetcode.com/problems/strange-printer/)
-- [Burst Balloons](https://leetcode.com/problems/burst-balloons/)
-- [Minimum Score Triangulation of Polygon](https://leetcode.com/problems/minimum-score-triangulation-of-polygon/)
-- [Remove Boxes](https://leetcode.com/problems/remove-boxes/)
-- [Palindrome Partitioning II](https://leetcode.com/problems/palindrome-partitioning-ii/)
-- [Super Egg Drop](https://leetcode.com/problems/super-egg-drop/)
-- [Unique Binary Search Trees](https://leetcode.com/problems/unique-binary-search-trees/)
-- [Different Ways to Add Parentheses](https://leetcode.com/problems/different-ways-to-add-parentheses/)
+- [Burst Balloons](https://leetcode.com/problems/burst-balloons/) — think about which balloon is burst *last* in a range.
+- [Palindrome Partitioning II](https://leetcode.com/problems/palindrome-partitioning-ii/) — min cuts; precompute palindrome table, then interval DP.
 
 ---
 
@@ -893,14 +810,8 @@ return dp[0][n - 1] >= 0
 
 ### Practice problems
 
-- [Predict the Winner](https://leetcode.com/problems/predict-the-winner/)
-- [Stone Game](https://leetcode.com/problems/stone-game/)
-- [Stone Game II](https://leetcode.com/problems/stone-game-ii/)
-- [Stone Game III](https://leetcode.com/problems/stone-game-iii/)
-- [Stone Game IV](https://leetcode.com/problems/stone-game-iv/)
-- [Can I Win](https://leetcode.com/problems/can-i-win/)
-- [Guess Number Higher or Lower II](https://leetcode.com/problems/guess-number-higher-or-lower-ii/)
-- [Zuma Game](https://leetcode.com/problems/zuma-game/)
+- [Predict the Winner](https://leetcode.com/problems/predict-the-winner/) — `dp[i][j]` = best score difference the current player can force.
+- [Stone Game](https://leetcode.com/problems/stone-game/) — same score-difference minimax, picking from either end.
 
 ## Pattern 8: Grid DP
 
@@ -1021,14 +932,8 @@ State `(r, c)` + fixed move set (right/down, or 4-dir, etc.). Recurrence aggrega
 
 **Practice problems:**
 
-- [Unique Paths](https://leetcode.com/problems/unique-paths/)
-- [Unique Paths II](https://leetcode.com/problems/unique-paths-ii/)
-- [Minimum Path Sum](https://leetcode.com/problems/minimum-path-sum/)
-- [Maximal Square](https://leetcode.com/problems/maximal-square/)
-- [Maximal Rectangle](https://leetcode.com/problems/maximal-rectangle/)
-- [Minimum Falling Path Sum](https://leetcode.com/problems/minimum-falling-path-sum/)
-- [Count Square Submatrices with All Ones](https://leetcode.com/problems/count-square-submatrices-with-all-ones/)
-- [Triangle](https://leetcode.com/problems/triangle/)
+- [Minimum Path Sum](https://leetcode.com/problems/minimum-path-sum/) — the template: `dp[r][c] = grid + min(up, left)`.
+- [Maximal Square](https://leetcode.com/problems/maximal-square/) — `dp[r][c] = 1 + min` of three neighbors (square side length).
 
 
 ## Pattern 9: Tree DP
@@ -1166,7 +1071,7 @@ Merge children's DP tables at each node. Often O(n²) but tight — each pair of
 
 
 
-## Misc / Must-Do DP Problems
+## Bitmask & Probability DP
 
 ### Bitmask DP
 
@@ -1184,12 +1089,8 @@ for mask in range(1 << n):
 
 Bit tricks: `mask & (1<<i)` check, `mask | (1<<i)` add, `mask ^ (1<<i)` remove, `(1<<n)-1` full set.
 
-- [Partition to K Equal Sum Subsets](https://leetcode.com/problems/partition-to-k-equal-sum-subsets/)
-- [Shortest Path Visiting All Nodes](https://leetcode.com/problems/shortest-path-visiting-all-nodes/)
-- [Find the Shortest Superstring](https://leetcode.com/problems/find-the-shortest-superstring/)
-- [Smallest Sufficient Team](https://leetcode.com/problems/smallest-sufficient-team/)
-- [Number of Ways to Wear Different Hats to Each Other](https://leetcode.com/problems/number-of-ways-to-wear-different-hats-to-each-other/)
-- [Minimum Number of Work Sessions to Finish the Tasks](https://leetcode.com/problems/minimum-number-of-work-sessions-to-finish-the-tasks/)
+- [Partition to K Equal Sum Subsets](https://leetcode.com/problems/partition-to-k-equal-sum-subsets/) — mask = which elements are used so far.
+- [Shortest Path Visiting All Nodes](https://leetcode.com/problems/shortest-path-visiting-all-nodes/) — TSP-style state `(mask, node)`.
 
 ---
 
@@ -1204,16 +1105,88 @@ for state in all_states:
         dp[next_state] += dp[state] * p
 ```
 
-- [Knight Probability in Chessboard](https://leetcode.com/problems/knight-probability-in-chessboard/)
-- [New 21 Game](https://leetcode.com/problems/new-21-game/)
-- [Soup Servings](https://leetcode.com/problems/soup-servings/)
-- [Toss Strange Coins](https://leetcode.com/problems/toss-strange-coins/)
-- [Probability of a Two Boxes Having The Same Number of Distinct Balls](https://leetcode.com/problems/probability-of-a-two-boxes-having-the-same-number-of-distinct-balls/)
+- [Knight Probability in Chessboard](https://leetcode.com/problems/knight-probability-in-chessboard/) — `dp[step][r][c]` = prob of still being on the board.
+- [New 21 Game](https://leetcode.com/problems/new-21-game/) — probability DP with a sliding-window sum.
 
 ---
 
-### Other must-dos
+## Must-Do / FAANG DP Questions
 
+Problems **not** already used as examples above — a flat practice bank. Figuring out which pattern each needs is part of the drill.
+
+- [Fibonacci Number](https://leetcode.com/problems/fibonacci-number/)
+- [Climbing Stairs](https://leetcode.com/problems/climbing-stairs/)
+- [Min Cost Climbing Stairs](https://leetcode.com/problems/min-cost-climbing-stairs/)
+- [Decode Ways](https://leetcode.com/problems/decode-ways/)
+- [House Robber II](https://leetcode.com/problems/house-robber-ii/)
+- [Number of Longest Increasing Subsequence](https://leetcode.com/problems/number-of-longest-increasing-subsequence/)
+- [Longest String Chain](https://leetcode.com/problems/longest-string-chain/)
+- [Maximum Length of Pair Chain](https://leetcode.com/problems/maximum-length-of-pair-chain/)
+- [Find the Longest Valid Obstacle Course at Each Position](https://leetcode.com/problems/find-the-longest-valid-obstacle-course-at-each-position/)
+- [Arithmetic Slices II - Subsequence](https://leetcode.com/problems/arithmetic-slices-ii-subsequence/)
+- [Target Sum](https://leetcode.com/problems/target-sum/)
+- [Last Stone Weight II](https://leetcode.com/problems/last-stone-weight-ii/)
+- [Ones and Zeroes](https://leetcode.com/problems/ones-and-zeroes/)
+- [Partition Array Into Two Arrays to Minimize Sum Difference](https://leetcode.com/problems/partition-array-into-two-arrays-to-minimize-sum-difference/)
+- [Coin Change 2](https://leetcode.com/problems/coin-change-2/)
+- [Combination Sum IV](https://leetcode.com/problems/combination-sum-iv/)
+- [Perfect Squares](https://leetcode.com/problems/perfect-squares/)
+- [Minimum Cost For Tickets](https://leetcode.com/problems/minimum-cost-for-tickets/)
+- [Delete Operation for Two Strings](https://leetcode.com/problems/delete-operation-for-two-strings/)
+- [Minimum ASCII Delete Sum for Two Strings](https://leetcode.com/problems/minimum-ascii-delete-sum-for-two-strings/)
+- [Shortest Common Supersequence](https://leetcode.com/problems/shortest-common-supersequence/)
+- [Longest Palindromic Subsequence](https://leetcode.com/problems/longest-palindromic-subsequence/)
+- [Longest Palindromic Substring](https://leetcode.com/problems/longest-palindromic-substring/)
+- [Palindromic Substrings](https://leetcode.com/problems/palindromic-substrings/)
+- [Regular Expression Matching](https://leetcode.com/problems/regular-expression-matching/)
+- [Wildcard Matching](https://leetcode.com/problems/wildcard-matching/)
+- [Distinct Subsequences](https://leetcode.com/problems/distinct-subsequences/)
+- [Distinct Subsequences II](https://leetcode.com/problems/distinct-subsequences-ii/)
+- [Number of Unique Good Subsequences](https://leetcode.com/problems/number-of-unique-good-subsequences/)
+- [Best Time to Buy and Sell Stock II](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/)
+- [Best Time to Buy and Sell Stock III](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii/)
+- [Best Time to Buy and Sell Stock with Cooldown](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/)
+- [Best Time to Buy and Sell Stock with Transaction Fee](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-transaction-fee/)
+- [Maximum Profit from Trading Stocks](https://leetcode.com/problems/maximum-profit-from-trading-stocks/)
+- [Cherry Pickup](https://leetcode.com/problems/cherry-pickup/)
+- [Maximum Alternating Subsequence Sum](https://leetcode.com/problems/maximum-alternating-subsequence-sum/)
+- [Minimum Swaps to Make Sequences Increasing](https://leetcode.com/problems/minimum-swaps-to-make-sequences-increasing/)
+- [Flip String to Monotone Increasing](https://leetcode.com/problems/flip-string-to-monotone-increasing/)
+- [Solving Questions With Brainpower](https://leetcode.com/problems/solving-questions-with-brainpower/)
+- [Knight Dialer](https://leetcode.com/problems/knight-dialer/)
+- [Student Attendance Record II](https://leetcode.com/problems/student-attendance-record-ii/)
+- [Paint House](https://leetcode.com/problems/paint-house/)
+- [Paint House II](https://leetcode.com/problems/paint-house-ii/)
+- [Paint House III](https://leetcode.com/problems/paint-house-iii/)
+- [Paint Fence](https://leetcode.com/problems/paint-fence/)
+- [Decode Ways II](https://leetcode.com/problems/decode-ways-ii/)
+- [Minimum Cost to Merge Stones](https://leetcode.com/problems/minimum-cost-to-merge-stones/)
+- [Minimum Cost Tree From Leaf Values](https://leetcode.com/problems/minimum-cost-tree-from-leaf-values/)
+- [Strange Printer](https://leetcode.com/problems/strange-printer/)
+- [Minimum Score Triangulation of Polygon](https://leetcode.com/problems/minimum-score-triangulation-of-polygon/)
+- [Remove Boxes](https://leetcode.com/problems/remove-boxes/)
+- [Super Egg Drop](https://leetcode.com/problems/super-egg-drop/)
+- [Unique Binary Search Trees](https://leetcode.com/problems/unique-binary-search-trees/)
+- [Different Ways to Add Parentheses](https://leetcode.com/problems/different-ways-to-add-parentheses/)
+- [Stone Game II](https://leetcode.com/problems/stone-game-ii/)
+- [Stone Game III](https://leetcode.com/problems/stone-game-iii/)
+- [Stone Game IV](https://leetcode.com/problems/stone-game-iv/)
+- [Can I Win](https://leetcode.com/problems/can-i-win/)
+- [Guess Number Higher or Lower II](https://leetcode.com/problems/guess-number-higher-or-lower-ii/)
+- [Zuma Game](https://leetcode.com/problems/zuma-game/)
+- [Unique Paths](https://leetcode.com/problems/unique-paths/)
+- [Unique Paths II](https://leetcode.com/problems/unique-paths-ii/)
+- [Maximal Rectangle](https://leetcode.com/problems/maximal-rectangle/)
+- [Minimum Falling Path Sum](https://leetcode.com/problems/minimum-falling-path-sum/)
+- [Count Square Submatrices with All Ones](https://leetcode.com/problems/count-square-submatrices-with-all-ones/)
+- [Triangle](https://leetcode.com/problems/triangle/)
+- [Find the Shortest Superstring](https://leetcode.com/problems/find-the-shortest-superstring/)
+- [Smallest Sufficient Team](https://leetcode.com/problems/smallest-sufficient-team/)
+- [Number of Ways to Wear Different Hats to Each Other](https://leetcode.com/problems/number-of-ways-to-wear-different-hats-to-each-other/)
+- [Minimum Number of Work Sessions to Finish the Tasks](https://leetcode.com/problems/minimum-number-of-work-sessions-to-finish-the-tasks/)
+- [Soup Servings](https://leetcode.com/problems/soup-servings/)
+- [Toss Strange Coins](https://leetcode.com/problems/toss-strange-coins/)
+- [Probability of a Two Boxes Having The Same Number of Distinct Balls](https://leetcode.com/problems/probability-of-a-two-boxes-having-the-same-number-of-distinct-balls/)
 - [Maximum Profit in Job Scheduling](https://leetcode.com/problems/maximum-profit-in-job-scheduling/)
 - [Constrained Subsequence Sum](https://leetcode.com/problems/constrained-subsequence-sum/)
 - [Number of Dice Rolls With Target Sum](https://leetcode.com/problems/number-of-dice-rolls-with-target-sum/)
