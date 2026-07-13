@@ -4,7 +4,7 @@ Built-in containers and the standard-library tools you reach for in interviews. 
 
 ## Covered
 
-`list` · `tuple` · `str` · `dict` · `set` · `deque` · `stack/queue` · `Counter` · `defaultdict` · `heapq` · `slicing` · `comprehensions` · `iterables toolkit` · `lambda` 
+`list` · `tuple` · `str` · `dict` · `set` · `deque` · `stack/queue` · `Counter` · `defaultdict` · `heapq` · `slicing` · `comprehensions` · `iterables toolkit` · `lambda` · `functools cache`
 
 ---
 
@@ -421,6 +421,46 @@ list(filter(lambda x: x % 2 == 0, nums))
 ```
 
 > **When NOT to use it.** If the logic spans multiple lines, is reused, or needs a name to be readable, write a real `def`. A lambda assigned to a variable (`f = lambda x: ...`) is just a worse `def` — use `def`.
+
+---
+
+# 14. Memoization — `functools.cache` / `lru_cache`
+
+Wrap a pure function so repeated calls with the same args return a cached result instead of recomputing. This is the one-line way to turn an exponential recursion into a polynomial one (top-down DP).
+
+```python
+from functools import cache, lru_cache
+
+@cache                      # unbounded cache (Python 3.9+)
+def fib(n):
+    if n < 2:
+        return n
+    return fib(n - 1) + fib(n - 2)
+
+@lru_cache(maxsize=None)    # same as @cache; maxsize=N keeps only the N most-recent
+def f(args): ...
+```
+
+- Arguments must be **hashable** (ints, strings, tuples — not lists or dicts). Convert a list to a `tuple` before passing it in.
+- `@cache` is unbounded; `@lru_cache(maxsize=N)` evicts least-recently-used entries once it exceeds `N`.
+- Only for **pure** functions (same input → same output, no side effects). Caching something that reads mutable state or the clock gives stale results.
+- Inspect/clear with `fib.cache_info()` and `fib.cache_clear()`.
+
+```python
+def solve(grid):
+    R, C = len(grid), len(grid[0])
+
+    @cache
+    def dp(r, c):                       # memoize on the (r, c) state
+        if r == R - 1 and c == C - 1:
+            return grid[r][c]
+        best = float('inf')
+        if r + 1 < R: best = min(best, dp(r + 1, c))
+        if c + 1 < C: best = min(best, dp(r, c + 1))
+        return grid[r][c] + best
+
+    return dp(0, 0)
+```
 
 ---
 
