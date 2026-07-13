@@ -22,9 +22,10 @@ Quick Links
 - [Minimum Spanning Tree (MST)](#minimum-spanning-tree-mst)
     - [Kruskal (sort edges + Union-Find)](#kruskal-sort-edges--union-find)
     - [Prim (heap-based)](#prim-heap-based)
-- [Strongly Connected Components (Kosaraju's)](#strongly-connected-components-kosarajus-algorithm)
-- [Bridges & Articulation Points](#bridges--articulation-points)
-- [Tarjan's Algorithm (SCC via low-link)](#tarjans-algorithm-scc-via-low-link)
+- [Strongly Connected Components](#strongly-connected-components)
+    - [Kosaraju's Algorithm](#kosarajus-algorithm)
+    - [Bridges & Articulation Points](#bridges--articulation-points)
+    - [Tarjan's Algorithm (SCC via low-link)](#tarjans-algorithm-scc-via-low-link)
 - [Quick reference](#quick-reference)
 
 
@@ -371,13 +372,13 @@ class DSU:
 Find the minimum-cost path from a source to one/all other vertices. Every algorithm here is built on **edge relaxation** — "if going through `u` reaches `v` cheaper than the best known, update `v`." They differ only in the **order** they relax edges, and that order is dictated by the graph's shape (weights, signs, DAG or not).
 
 
-| Algorithm | Handles | Source→ | Negative edges | Negative cycle |
-|---|---|---|---|---|
-| BFS | unweighted | single | — | — |
-| Dijkstra | non-negative weights | single | ✗ | ✗ |
-| Bellman-Ford | any weights | single | ✓ | detects |
-| Floyd-Warshall | any weights | all pairs | ✓ | detects (diagonal < 0) |
-| DAG relax | any weights, DAG only | single | ✓ | impossible (acyclic) |
+| Algorithm | Handles | Source→ | Negative edges | Negative cycle | Time |
+|---|---|---|---|---|---|
+| BFS | unweighted | single | — | — | O(V + E) |
+| Dijkstra | non-negative weights | single | ✗ | ✗ | O((V + E) log V) |
+| Bellman-Ford | any weights | single | ✓ | detects | O(V · E) |
+| Floyd-Warshall | any weights | all pairs | ✓ | detects (diagonal < 0) | O(V³) |
+| DAG relax | any weights, DAG only | single | ✓ | impossible (acyclic) | O(V + E) |
 
 #### BFS (unweighted shortest path)
 
@@ -651,7 +652,9 @@ A **strongly connected component (SCC)** is a maximal set of vertices in a **dir
    2 ◀───┘      4        collapse each SCC to a node ⇒ a DAG (the "condensation")
 ```
 
- ### **Kosaraju's algorithm — two DFS passes, `O(V + E)`:**
+#### Kosaraju's Algorithm
+
+Two DFS passes, `O(V + E)`:
 
 1. DFS the original graph, pushing each vertex onto a stack **when it finishes** (post-order).
 2. **Reverse** every edge (transpose the graph).
