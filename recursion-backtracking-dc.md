@@ -47,24 +47,25 @@ def rev(s):
 ---
 
 ## Backtracking — Choose / Explore / Unchoose
+
 Build a solution incrementally in a shared `path`. At each step: **choose** a candidate, **explore** deeper, then **unchoose** (undo) so the next candidate starts from a clean state.
 
 ```python
-def recn(state):
-    if is_solution(state):
-        record(state)
+def backtrack(path):
+    if is_solution(path):
+        record(path)
         return
-    for choice in choices(state):
-        apply(choice, state)
-        recn(state)
-        undo(choice, state)
+    for choice in choices(path):
+        path.append(choice)      # choose
+        backtrack(path)          # explore
+        path.pop()               # unchoose
 ```
 
+### Combination Sum
+
+Explore with `i` (not `i + 1`) so the same element can be reused, and let the base case check the running total.
+
 ```python
-# Combination Sum
-
-# Identical, except exploring passes `i` (not `i + 1`) so the same element can be picked again, and # the base case checks the running total.
-
 def combination_sum(candidates, target):
     res, path = [], []
 
@@ -83,11 +84,11 @@ def combination_sum(candidates, target):
     return res
 ```
 
+### Permutations
+
+Order matters, so every step may pick any element not already in `path` — track a `used` array instead of a start index.
+
 ```python
-# Permutations
-
-# Order matters, so every step may pick any element not already in `path`.
-
 def permute(nums):
     res, path = [], []
     used = [False] * len(nums)
@@ -107,17 +108,17 @@ def permute(nums):
 
     backtrack()
     return res
-
 ```
+
+### Pruning duplicates
+
+Sort the input first, then skip a candidate equal to its left neighbour **within the same recursion level**:
+
 ```python
-# Pruning duplicates
-
-# Sort the input first, then skip a candidate equal to its left neighbor **within the same recursion level**:
-
-    for i in range(start, len(nums)):
-        if i > start and nums[i] == nums[i - 1]:   # skip duplicate at this level
-            continue
-        ...
+for i in range(start, len(nums)):
+    if i > start and nums[i] == nums[i - 1]:   # skip duplicate at this level
+        continue
+    ...
 ```
 
 For permutations, the "same level" check becomes: skip `nums[i]` if `nums[i] == nums[i-1] and not used[i-1]` (its identical twin hasn't been placed yet on this path).
@@ -144,7 +145,7 @@ For permutations, the "same level" check becomes: skip `nums[i]` if `nums[i] == 
 
 ## Divide & Conquer
 
-**Divide** into independent subproblems → **conquer** each recursively → **combine** the results. The cost follows `T(n) = a·T(n/b) + f(n)` (see the Master theorem below).
+**Divide** into independent subproblems → **conquer** each recursively → **combine** the results. The cost follows the recurrence `T(n) = a·T(n/b) + f(n)`.
 
 ### Merge Sort
 
