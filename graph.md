@@ -26,6 +26,7 @@ Quick Links
     - [Kosaraju's Algorithm](#kosarajus-algorithm)
     - [Bridges & Articulation Points](#bridges--articulation-points)
     - [Tarjan's Algorithm (SCC via low-link)](#tarjans-algorithm-scc-via-low-link)
+- [Must-Do / FAANG Interview Questions](#must-do--faang-interview-questions)
 - [Quick reference](#quick-reference)
 
 
@@ -105,12 +106,8 @@ def bfs(graph):
 ```    
 #### Questions
 
-- [Rotting Oranges](https://leetcode.com/problems/rotting-oranges/) — multi-source BFS
-- [01 Matrix](https://leetcode.com/problems/01-matrix/) — multi-source BFS from all zeros
-- [Shortest Path in Binary Matrix](https://leetcode.com/problems/shortest-path-in-binary-matrix/) — BFS gives shortest path on unweighted grid
-- [Word Ladder](https://leetcode.com/problems/word-ladder/) — BFS over implicit graph of words
-- [As Far from Land as Possible](https://leetcode.com/problems/as-far-from-land-as-possible/)
-- [Open the Lock](https://leetcode.com/problems/open-the-lock/)
+- [Rotting Oranges](https://leetcode.com/problems/rotting-oranges/) — multi-source BFS: seed the queue with every rotten orange, then expand level by level.
+- [Word Ladder](https://leetcode.com/problems/word-ladder/) — BFS over an implicit graph where words one letter apart are neighbors.
 
 #### DFS
 
@@ -131,17 +128,8 @@ def dfs(graph):
 
 #### Questions
 
-- [Flood Fill](https://leetcode.com/problems/flood-fill/) — the plain DFS template on a grid
-- [Number of Islands](https://leetcode.com/problems/number-of-islands/) — count connected components
-- [Max Area of Island](https://leetcode.com/problems/max-area-of-island/) — DFS returning a subtree size
-- [Number of Provinces](https://leetcode.com/problems/number-of-provinces/) — connected components on an adjacency matrix
-- [Keys and Rooms](https://leetcode.com/problems/keys-and-rooms/) — reachability from node 0
-- [Number of Connected Components in an Undirected Graph](https://leetcode.com/problems/number-of-connected-components-in-an-undirected-graph/) — the `for u in graph` loop is the whole point
-- [Clone Graph](https://leetcode.com/problems/clone-graph/)
-- [Pacific Atlantic Water Flow](https://leetcode.com/problems/pacific-atlantic-water-flow/)
-- [Surrounded Regions](https://leetcode.com/problems/surrounded-regions/)
-- [Shortest Bridge](https://leetcode.com/problems/shortest-bridge/)
-- [All Paths From Source to Target](https://leetcode.com/problems/all-paths-from-source-to-target/)
+- [Number of Islands](https://leetcode.com/problems/number-of-islands/) — flood-fill each unvisited land cell; the number of flood-fills you start is the answer.
+- [Clone Graph](https://leetcode.com/problems/clone-graph/) — DFS while mapping original→copy in a hashmap so each node is cloned once.
 
 #### Bipartite Check (BFS/DFS 2-coloring)
 
@@ -165,8 +153,7 @@ def is_bipartite(graph, n):
     return True
 ```
 
-- [Is Graph Bipartite?](https://leetcode.com/problems/is-graph-bipartite/)
-- [Possible Bipartition](https://leetcode.com/problems/possible-bipartition/)
+- [Is Graph Bipartite?](https://leetcode.com/problems/is-graph-bipartite/) — 2-color via BFS/DFS; a same-colored neighbor means it isn't bipartite.
 
 
 ### TOPOLOGICAL SORTING
@@ -269,16 +256,8 @@ def topo_sort_dfs(n, edges):
 ```
 ### Questions
 
-- [Course Schedule](https://leetcode.com/problems/course-schedule/) — can all courses be finished (cycle check)
-- [Course Schedule II](https://leetcode.com/problems/course-schedule-ii/) — return one valid ordering
-- [Course Schedule IV](https://leetcode.com/problems/course-schedule-iv/) — reachability queries over the DAG
-- [Parallel Courses](https://leetcode.com/problems/parallel-courses/) — min semesters = longest chain (BFS levels)
-- [Find Eventual Safe States](https://leetcode.com/problems/find-eventual-safe-states/) — topo sort on the reversed graph
-- [Minimum Height Trees](https://leetcode.com/problems/minimum-height-trees/) — peel leaves inward (topo on undirected)
-- [Find All Possible Recipes from Given Supplies](https://leetcode.com/problems/find-all-possible-recipes-from-given-supplies/) — Kahn's with supplies as sources
-- [Sort Items by Groups Respecting Dependencies](https://leetcode.com/problems/sort-items-by-groups-respecting-dependencies/) — two-level topo (groups + items)
-- [Alien Dictionary](https://leetcode.com/problems/alien-dictionary/) — derive edges from adjacent words, then topo sort
-- [Build a Matrix With Conditions](https://leetcode.com/problems/build-a-matrix-with-conditions/) — independent row + column topo orders
+- [Course Schedule II](https://leetcode.com/problems/course-schedule-ii/) — return any valid order; an empty result means a cycle exists.
+- [Alien Dictionary](https://leetcode.com/problems/alien-dictionary/) — derive precedence edges from adjacent words, then topological sort.
 
 
 ### Disjoint Set Union (DSU) / Union-Find
@@ -351,17 +330,8 @@ class DSU:
 
 #### Questions
 
-- [Redundant Connection](https://leetcode.com/problems/redundant-connection/) — the edge whose `union` returns `False` closes the cycle
-- [Number of Provinces](https://leetcode.com/problems/number-of-provinces/) — union every connection, count distinct roots
-- [Graph Valid Tree](https://leetcode.com/problems/graph-valid-tree/) — tree iff `n-1` edges and no union ever fails
-- [Number of Operations to Make Network Connected](https://leetcode.com/problems/number-of-operations-to-make-network-connected/) — answer = components − 1 (if enough spare cables)
-- [Accounts Merge](https://leetcode.com/problems/accounts-merge/) — union accounts sharing an email
-- [Satisfiability of Equality Equations](https://leetcode.com/problems/satisfiability-of-equality-equations/) — union all `==`, then check every `!=`
-- [Evaluate Division](https://leetcode.com/problems/evaluate-division/) — weighted DSU (store ratio to parent)
-- [Smallest String With Swaps](https://leetcode.com/problems/smallest-string-with-swaps/) — union swappable indices, sort chars within each component
-- [Most Stones Removed with Same Row or Column](https://leetcode.com/problems/most-stones-removed-with-same-row-or-column/) — union by shared row/column, answer = stones − components
-- [Number of Islands II](https://leetcode.com/problems/number-of-islands-ii/) — add land incrementally, union with neighbors online
-- [Redundant Connection II](https://leetcode.com/problems/redundant-connection-ii/) — directed variant; handle the two-parent case first
+- [Redundant Connection](https://leetcode.com/problems/redundant-connection/) — the edge whose `union` returns `False` is the one that closes a cycle.
+- [Accounts Merge](https://leetcode.com/problems/accounts-merge/) — union accounts that share any email, then group members by their root.
 
 
 
@@ -487,18 +457,8 @@ def dag_shortest_path(n, edges, src):            # edges: [(u, v, w), ...]
 
 #### Questions
 
-- [Network Delay Time](https://leetcode.com/problems/network-delay-time/)
-- [Path with Minimum Effort](https://leetcode.com/problems/path-with-minimum-effort/)
-- [Swim in Rising Water](https://leetcode.com/problems/swim-in-rising-water/)
-- [Path with Maximum Probability](https://leetcode.com/problems/path-with-maximum-probability/)
-- [The Maze II](https://leetcode.com/problems/the-maze-ii/)
-- [Minimum Cost to Convert String I](https://leetcode.com/problems/minimum-cost-to-convert-string-i/)
-- [Find Minimum Time to Reach Last Room I](https://leetcode.com/problems/find-minimum-time-to-reach-last-room-i/)
-- [Minimum Cost to Make at Least One Valid Path in a Grid](https://leetcode.com/problems/minimum-cost-to-make-at-least-one-valid-path-in-a-grid/)
-- [Cheapest Flights Within K Stops](https://leetcode.com/problems/cheapest-flights-within-k-stops/)
-- [Minimum Cost Path with Edge Reversals](https://leetcode.com/problems/minimum-cost-path-with-edge-reversals/)
-- [Minimum Weighted Subgraph With the Required Paths](https://leetcode.com/problems/minimum-weighted-subgraph-with-the-required-paths/)
-- [Find the City With the Smallest Number of Neighbors at a Threshold Distance](https://leetcode.com/problems/find-the-city-with-the-smallest-number-of-neighbors-at-a-threshold-distance/)
+- [Network Delay Time](https://leetcode.com/problems/network-delay-time/) — single source to all nodes; works with **Dijkstra, Bellman-Ford, or Floyd-Warshall** — a great problem to implement all three and compare.
+- [Cheapest Flights Within K Stops](https://leetcode.com/problems/cheapest-flights-within-k-stops/) — Bellman-Ford with exactly k+1 relaxation rounds (the stop limit caps path length).
 
 ---
 
@@ -582,11 +542,8 @@ Directed cycle detection is the **same algorithm** as [Topological Sorting](#top
 
 #### Questions
 
-- [Course Schedule](https://leetcode.com/problems/course-schedule/)
-- [Find Eventual Safe States](https://leetcode.com/problems/find-eventual-safe-states/)
-- [Redundant Connection](https://leetcode.com/problems/redundant-connection/)
-- [Graph Valid Tree](https://leetcode.com/problems/graph-valid-tree/)
-- [Detect Cycles in 2D Grid](https://leetcode.com/problems/detect-cycles-in-2d-grid/)
+- [Course Schedule](https://leetcode.com/problems/course-schedule/) — directed cycle detection = "can every node be topologically sorted?"
+- [Detect Cycles in 2D Grid](https://leetcode.com/problems/detect-cycles-in-2d-grid/) — undirected cycle on a grid via a DFS parent check (or DSU).
 
 ### Minimum Spanning Tree (MST)
 
@@ -635,9 +592,7 @@ def prim(graph, n):                              # graph: {u: [(v, w), ...]}
 
 #### Questions
 
-- [Min Cost to Connect All Points](https://leetcode.com/problems/min-cost-to-connect-all-points/)
-- [Optimize Water Distribution in a Village](https://leetcode.com/problems/optimize-water-distribution-in-a-village/)
-- [Connecting Cities With Minimum Cost](https://leetcode.com/problems/connecting-cities-with-minimum-cost/)
+- [Min Cost to Connect All Points](https://leetcode.com/problems/min-cost-to-connect-all-points/) — MST over a complete graph of Manhattan distances (Prim or Kruskal).
 
 ---
 
@@ -709,8 +664,7 @@ def kosaraju(n, adj):                     # adj: adjacency list over 0..n-1
 
 Pure SCC problems are uncommon on LeetCode; the Kosaraju/Tarjan machinery usually shows up as bridges, articulation points, or reachability.
 
-- [Critical Connections in a Network](https://leetcode.com/problems/critical-connections-in-a-network/)
-- [Course Schedule IV](https://leetcode.com/problems/course-schedule-iv/)
+- [Critical Connections in a Network](https://leetcode.com/problems/critical-connections-in-a-network/) — find all bridges with Tarjan's low-link DFS.
 
 ---
 
@@ -825,6 +779,68 @@ def tarjan_scc(n, adj):
 ```
 
 > Tarjan vs Kosaraju: same `O(V + E)`, but Tarjan does it in **one** DFS (no transpose) at the cost of the extra stack bookkeeping.
+
+---
+
+### Must-Do / FAANG Interview Questions
+
+The graph problems that show up most in big-tech interviews. Figuring out which technique each needs is part of the practice — concepts and worked hints live in the sections above.
+
+- [Number of Islands](https://leetcode.com/problems/number-of-islands/)
+- [Clone Graph](https://leetcode.com/problems/clone-graph/)
+- [Course Schedule](https://leetcode.com/problems/course-schedule/)
+- [Course Schedule II](https://leetcode.com/problems/course-schedule-ii/)
+- [Pacific Atlantic Water Flow](https://leetcode.com/problems/pacific-atlantic-water-flow/)
+- [Rotting Oranges](https://leetcode.com/problems/rotting-oranges/)
+- [Word Ladder](https://leetcode.com/problems/word-ladder/)
+- [Accounts Merge](https://leetcode.com/problems/accounts-merge/)
+- [Network Delay Time](https://leetcode.com/problems/network-delay-time/)
+- [Cheapest Flights Within K Stops](https://leetcode.com/problems/cheapest-flights-within-k-stops/)
+- [Flood Fill](https://leetcode.com/problems/flood-fill/)
+- [Max Area of Island](https://leetcode.com/problems/max-area-of-island/)
+- [Surrounded Regions](https://leetcode.com/problems/surrounded-regions/)
+- [Shortest Bridge](https://leetcode.com/problems/shortest-bridge/)
+- [01 Matrix](https://leetcode.com/problems/01-matrix/)
+- [Shortest Path in Binary Matrix](https://leetcode.com/problems/shortest-path-in-binary-matrix/)
+- [As Far from Land as Possible](https://leetcode.com/problems/as-far-from-land-as-possible/)
+- [Open the Lock](https://leetcode.com/problems/open-the-lock/)
+- [Keys and Rooms](https://leetcode.com/problems/keys-and-rooms/)
+- [All Paths From Source to Target](https://leetcode.com/problems/all-paths-from-source-to-target/)
+- [Number of Provinces](https://leetcode.com/problems/number-of-provinces/)
+- [Number of Connected Components in an Undirected Graph](https://leetcode.com/problems/number-of-connected-components-in-an-undirected-graph/)
+- [Redundant Connection](https://leetcode.com/problems/redundant-connection/)
+- [Graph Valid Tree](https://leetcode.com/problems/graph-valid-tree/)
+- [Number of Operations to Make Network Connected](https://leetcode.com/problems/number-of-operations-to-make-network-connected/)
+- [Satisfiability of Equality Equations](https://leetcode.com/problems/satisfiability-of-equality-equations/)
+- [Evaluate Division](https://leetcode.com/problems/evaluate-division/)
+- [Smallest String With Swaps](https://leetcode.com/problems/smallest-string-with-swaps/)
+- [Most Stones Removed with Same Row or Column](https://leetcode.com/problems/most-stones-removed-with-same-row-or-column/)
+- [Number of Islands II](https://leetcode.com/problems/number-of-islands-ii/)
+- [Redundant Connection II](https://leetcode.com/problems/redundant-connection-ii/)
+- [Course Schedule IV](https://leetcode.com/problems/course-schedule-iv/)
+- [Alien Dictionary](https://leetcode.com/problems/alien-dictionary/)
+- [Find Eventual Safe States](https://leetcode.com/problems/find-eventual-safe-states/)
+- [Minimum Height Trees](https://leetcode.com/problems/minimum-height-trees/)
+- [Parallel Courses](https://leetcode.com/problems/parallel-courses/)
+- [Find All Possible Recipes from Given Supplies](https://leetcode.com/problems/find-all-possible-recipes-from-given-supplies/)
+- [Sort Items by Groups Respecting Dependencies](https://leetcode.com/problems/sort-items-by-groups-respecting-dependencies/)
+- [Build a Matrix With Conditions](https://leetcode.com/problems/build-a-matrix-with-conditions/)
+- [Path with Minimum Effort](https://leetcode.com/problems/path-with-minimum-effort/)
+- [Swim in Rising Water](https://leetcode.com/problems/swim-in-rising-water/)
+- [Path with Maximum Probability](https://leetcode.com/problems/path-with-maximum-probability/)
+- [The Maze II](https://leetcode.com/problems/the-maze-ii/)
+- [Minimum Cost to Make at Least One Valid Path in a Grid](https://leetcode.com/problems/minimum-cost-to-make-at-least-one-valid-path-in-a-grid/)
+- [Minimum Cost to Convert String I](https://leetcode.com/problems/minimum-cost-to-convert-string-i/)
+- [Find Minimum Time to Reach Last Room I](https://leetcode.com/problems/find-minimum-time-to-reach-last-room-i/)
+- [Minimum Cost Path with Edge Reversals](https://leetcode.com/problems/minimum-cost-path-with-edge-reversals/)
+- [Minimum Weighted Subgraph With the Required Paths](https://leetcode.com/problems/minimum-weighted-subgraph-with-the-required-paths/)
+- [Find the City With the Smallest Number of Neighbors at a Threshold Distance](https://leetcode.com/problems/find-the-city-with-the-smallest-number-of-neighbors-at-a-threshold-distance/)
+- [Is Graph Bipartite?](https://leetcode.com/problems/is-graph-bipartite/)
+- [Possible Bipartition](https://leetcode.com/problems/possible-bipartition/)
+- [Min Cost to Connect All Points](https://leetcode.com/problems/min-cost-to-connect-all-points/)
+- [Connecting Cities With Minimum Cost](https://leetcode.com/problems/connecting-cities-with-minimum-cost/)
+- [Detect Cycles in 2D Grid](https://leetcode.com/problems/detect-cycles-in-2d-grid/)
+- [Critical Connections in a Network](https://leetcode.com/problems/critical-connections-in-a-network/)
 
 ---
 
