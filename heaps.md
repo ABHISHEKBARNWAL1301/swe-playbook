@@ -278,7 +278,7 @@ def merge_k_lists(lists):
 
 ---
 
-## Pattern 3: Two Heaps
+## Pattern 2: Two Heaps
 
 **When:** you need the **middle** of a stream, or to balance two groups by size/priority. Split the data into a smaller half and a larger half, each in its own heap.
 
@@ -320,7 +320,6 @@ Every `addNum` funnels the value through `lo → hi`, then rebalances so `lo` ne
 
 - [Find Median from Data Stream](https://leetcode.com/problems/find-median-from-data-stream/)
 - [Sliding Window Median](https://leetcode.com/problems/sliding-window-median/)
-- [IPO](https://leetcode.com/problems/ipo/)
 
 ---
 
