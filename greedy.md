@@ -12,27 +12,21 @@ Greedy is NOT always correct. If you can construct a counterexample where greedy
 - Interchange argument: swapping two adjacent choices never improves the answer
 
 
-## How to prove greedy is correct (informal)
-
-1. **Greedy choice property**: there's an optimal solution that starts with the greedy choice.
-2. **Optimal substructure**: after making the greedy choice, the rest is the same problem at smaller scale.
-3. **Interchange (swap) argument**: take any optimal solution; show swapping a non-greedy choice for the greedy one doesn't make it worse.
-
-If you can't prove it, suspect DP.
 
 
 ## Contents
 
-- [Pattern 1: Intervals](#pattern-1-intervals) (scheduling + sweep line)
-- [Pattern 2: Jump Game](#pattern-2-jump-game)
-- [Pattern 3: Sorted + Two Pointers](#pattern-3-sorted--two-pointers)
-- [Pattern 4: Greedy + Heap](#pattern-4-greedy--heap) (incl. Huffman)
+- [Pattern 1: Interval Scheduling](#pattern-1-interval-scheduling)
+- [Pattern 2: Sweep Line Algorithm](#pattern-2-sweep-line-algorithm)
+- [Pattern 3: Jump Game](#pattern-3-jump-game)
+- [Pattern 4: Sorted + Two Pointers](#pattern-4-sorted--two-pointers)
+- [Pattern 5: Greedy + Heap](#pattern-5-greedy--heap) (incl. Huffman)
 
 ---
 
-## Pattern 1: Intervals
+## Pattern 1: Interval Scheduling
 
-The most common greedy family. Sort by something, then scan.
+Sort intervals by start or end time, then scan sequentially to select, merge, or insert intervals.
 
 ### Activity Selection — max non-overlapping intervals
 
@@ -54,7 +48,7 @@ def max_non_overlap(intervals):
 
 ### Merge overlapping intervals
 
-Sort by **start**. Scan and merge.
+Sort by **start time**. Scan and merge.
 
 ```python
 def merge(intervals):
@@ -68,40 +62,29 @@ def merge(intervals):
     return out
 ```
 
-### Min meeting rooms — two-pointer sweep
+### Insert interval
 
-Sort starts and ends separately. Walk both: a start before the next end opens a room, otherwise one frees up. Max concurrent = answer.
-
-```python
-def min_meeting_rooms(intervals):
-    starts = sorted(s for s, _ in intervals)
-    ends   = sorted(e for _, e in intervals)
-    rooms = used = i = j = 0
-    while i < len(starts):
-        if starts[i] < ends[j]:
-            used += 1; i += 1
-        else:
-            used -= 1; j += 1
-        rooms = max(rooms, used)
-    return rooms
-```
-
-### Sweep line / event ordering
-
-Generalizes the sweep above: turn each interval into `(time, +delta)` / `(time, -delta)` events, sort by time, and scan a running total. Handles weighted overlaps (car pooling, population).
+Insert a new interval into sorted non-overlapping intervals and merge if necessary.
 
 ```python
-def car_pooling(trips, capacity):
-    events = []
-    for n, s, e in trips:
-        events.append((s, n))
-        events.append((e, -n))
-    events.sort()
-    cur = 0
-    for _, delta in events:
-        cur += delta
-        if cur > capacity: return False
-    return True
+def insert(intervals, newInterval):
+    out = []
+    i, n = 0, len(intervals)
+    # Add all intervals ending before newInterval starts
+    while i < n and intervals[i][1] < newInterval[0]:
+        out.append(intervals[i])
+        i += 1
+    # Merge overlapping intervals with newInterval
+    while i < n and intervals[i][0] <= newInterval[1]:
+        newInterval[0] = min(newInterval[0], intervals[i][0])
+        newInterval[1] = max(newInterval[1], intervals[i][1])
+        i += 1
+    out.append(newInterval)
+    # Add remaining intervals
+    while i < n:
+        out.append(intervals[i])
+        i += 1
+    return out
 ```
 
 ### Common problems
@@ -110,16 +93,134 @@ def car_pooling(trips, capacity):
 - [Minimum Number of Arrows to Burst Balloons](https://leetcode.com/problems/minimum-number-of-arrows-to-burst-balloons/)
 - [Merge Intervals](https://leetcode.com/problems/merge-intervals/)
 - [Insert Interval](https://leetcode.com/problems/insert-interval/)
-- [Meeting Rooms II](https://leetcode.com/problems/meeting-rooms-ii/)
-- [Car Pooling](https://leetcode.com/problems/car-pooling/)
-- [My Calendar II](https://leetcode.com/problems/my-calendar-ii/)
-- [Employee Free Time](https://leetcode.com/problems/employee-free-time/)
-- [Maximum Population Year](https://leetcode.com/problems/maximum-population-year/)
-- [The Skyline Problem](https://leetcode.com/problems/the-skyline-problem/)
 
 ---
 
-## Pattern 2: Jump Game
+## Pattern 2: Sweep Line Algorithm
+
+### Basic Knowledge & Core Concept
+
+The **Sweep Line (or Line Sweep)** algorithm conceptualizes a 1D line (or 2D vertical line) sweeping across coordinates/timestamps from left to right (`-∞` to `+∞`).
+
+Instead of comparing every object against every other object ($O(N^2)$), Sweep Line transforms the problem into event-driven processing ($O(N \log N)$):
+
+1. **Decompose into Events**: Break range/interval objects into discrete point events — e.g., an interval `[start, end]` becomes a "Start Event" at `start` and an "End Event" at `end`.
+2. **Sort Events**: Sort all events by timestamp/coordinate.
+3. **Maintain Active State**: Iterate through sorted events and update a dynamic state (e.g., running total counter, max-heap of active heights, or balanced BST of active segments).
+
+> **Tie-breaking Rule:** When two events occur at the exact same coordinate (e.g., end event of interval A and start event of interval B), event ordering depends on interval boundary rules:
+> - **Inclusive intervals `[start, end]`**: process **Start before End** (overlapping at boundaries count as concurrent).
+> - **Exclusive intervals `(start, end)`**: process **End before Start** (releasing resources before allocating new ones).
+
+---
+
+### Key Use Cases
+
+#### 1. 1D Concurrency & Max Overlapping (Difference Array / Point Events)
+
+**Use case:** Finding maximum concurrent items at any point in time, checking total capacity, or calculating overlap metrics across continuous ranges.
+
+**Approach:** Turn each interval `(s, e, val)` into `(s, +val)` and `(e, -val)`. Sort by time and accumulate `current_capacity`.
+
+```python
+def car_pooling(trips, capacity):
+    events = []
+    for n, s, e in trips:
+        events.append((s, n))    # Pick up passengers
+        events.append((e, -n))   # Drop off passengers
+    
+    # Sort events by time; if times equal, drop-offs (-n) come before pick-ups (+n)
+    events.sort(key=lambda x: (x[0], x[1]))
+    
+    cur = 0
+    for _, delta in events:
+        cur += delta
+        if cur > capacity:
+            return False
+    return True
+```
+
+#### 2. Two-Pointer Sweep (Separated Start/End Arrays)
+
+**Use case:** When you only care about overlap counts (like room allocation) and don't need custom event payloads or multi-attribute state.
+
+**Approach:** Extract and sort `starts` and `ends` independently. Use two pointers to simulate the sweep line advancing.
+
+```python
+def min_meeting_rooms(intervals):
+    starts = sorted(s for s, _ in intervals)
+    ends   = sorted(e for _, e in intervals)
+    rooms = used = i = j = 0
+    while i < len(starts):
+        if starts[i] < ends[j]:  # Meeting starts before earliest ending meeting
+            used += 1; i += 1
+        else:                     # A room frees up
+            used -= 1; j += 1
+        rooms = max(rooms, used)
+    return rooms
+```
+
+#### 3. 2D Sweep Line with Dynamic Active Set (Sweep Line + Heap / Sorted Set)
+
+**Use case:** Geometrical sweep line problems where active elements have varying properties (e.g., building heights, overlapping rectangles, skyline contour).
+
+**Approach:** Sweep along X-axis. As the sweep line crosses X, maintain active entities along Y-axis in a Heap or Balanced BST.
+
+```python
+import heapq
+
+def get_skyline(buildings):
+    # Events: (x, -height, right) for start, (x, 0, 0) for end
+    # Using -height so starts process taller buildings first
+    events = []
+    for l, r, h in buildings:
+        events.append((l, -h, r))  # Start of building
+        events.append((r, 0, 0))   # End marker
+    events.sort()
+
+    res = [[0, 0]]
+    # Max-heap: (-height, end_x)
+    hp = [(0, float('inf'))]
+
+    for x, neg_h, r in events:
+        if neg_h != 0:
+            heapq.heappush(hp, (neg_h, r))
+        
+        # Lazy deletion of expired buildings from heap top
+        while hp[0][1] <= x:
+            heapq.heappop(hp)
+            
+        cur_max = -hp[0][0]
+        if res[-1][1] != cur_max:
+            res.append([x, cur_max])
+
+    return res[1:]
+```
+
+---
+
+### Segregated Problem List
+
+#### 1D Concurrency & Max Overlap (Point Event Counting)
+- [Meeting Rooms II](https://leetcode.com/problems/meeting-rooms-ii/) — Min rooms needed for overlapping intervals
+- [Car Pooling](https://leetcode.com/problems/car-pooling/) — Capacity checking with point pick-up/drop-off
+- [Maximum Population Year](https://leetcode.com/problems/maximum-population-year/) — Max overlapping lifespan range
+- [Corporate Flight Bookings](https://leetcode.com/problems/corporate-flight-bookings/) — Prefix sum / difference array on 1D range
+
+#### Multi-Level Overlap & Gap / Free Time Sweep
+- [My Calendar I](https://leetcode.com/problems/my-calendar-i/) — Single overlap detection
+- [My Calendar II](https://leetcode.com/problems/my-calendar-ii/) — Double booking / triple booking detection
+- [Employee Free Time](https://leetcode.com/problems/employee-free-time/) — Finding gap intervals across multiple schedules
+- [Describe the Painting](https://leetcode.com/problems/describe-the-painting/) — Sweep line color sum tracking across line segments
+
+#### Advanced 2D / Active Set Sweep Line (Sweep + Heap / BST / Point Queries)
+- [The Skyline Problem](https://leetcode.com/problems/the-skyline-problem/) — 2D sweep with active max height heap
+- [Number of Flowers in Full Bloom](https://leetcode.com/problems/number-of-flowers-in-full-bloom/) — Point query on interval sweep line
+- [Rectangle Area II](https://leetcode.com/problems/rectangle-area-ii/) — 2D sweep line for total union area calculation
+
+---
+
+## Pattern 3: Jump Game
 
 ### Can you reach the end?
 
@@ -158,13 +259,15 @@ def jump(nums):
 
 ---
 
-## Pattern 3: Sorted + Two Pointers
+## Pattern 4: Sorted + Two Pointers
 
 Sort then greedily pair from both ends.
 
 ### Boats to Save People
 
-Two pointers from heaviest and lightest. Pair them if they fit; otherwise the lightest boat takes only the heaviest.
+**Problem:** each boat carries at most **2 people** with combined weight `≤ limit`. Return the minimum number of boats.
+
+**Approach:** sort, then two pointers from heaviest and lightest. Pair them if they fit; otherwise the boat takes only the heaviest.
 
 ```python
 def num_rescue_boats(people, limit):
@@ -188,13 +291,15 @@ def num_rescue_boats(people, limit):
 
 ---
 
-## Pattern 4: Greedy + Heap
+## Pattern 5: Greedy + Heap
 
 When greedy + sort isn't enough — you need to re-prioritize after each decision.
 
 ### Reorganize String
 
-Always place the most-frequent remaining char. Max-heap on counts.
+**Problem:** rearrange `s` so that **no two adjacent characters are the same**; return `""` if impossible (a char appearing more than `⌈n/2⌉` times can't be spaced out).
+
+**Approach:** always place the most-frequent *remaining* char, but hold the one you just used aside for a turn so it can't be picked twice in a row — then push it back. Max-heap on counts.
 
 ```python
 def reorganize(s):
@@ -242,8 +347,9 @@ def huffman(freqs):
 | Problem family                 | Sort by                           | Then…                          |
 |-------------------------------|-----------------------------------|--------------------------------|
 | Max non-overlap intervals      | End time                          | Pick if `start ≥ last_end`     |
-| Min meeting rooms / overlap    | Start time                        | Sweep with running count       |
 | Merge intervals                | Start time                        | Extend if `start ≤ last_end`   |
+| 1D Sweep Line (Concurrency)    | Event coordinate (time/x)         | Accumulate `+delta`/`-delta`   |
+| 2D Sweep Line (Skyline/Union)  | X-coordinate                      | Track active state in Heap/BST |
 | Jump game (reach end)          | —                                 | Track `max reach` while iterating |
 | Two-pointer pairing            | Sort, scan from both ends         | Pair greedily                  |
 | Stream re-prioritization       | Heap                              | Pop, decide, push back         |
