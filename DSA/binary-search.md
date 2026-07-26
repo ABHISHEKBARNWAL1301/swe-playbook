@@ -231,23 +231,23 @@ def find_peak(nums):
 
 ## Common pitfalls
 
-| Pitfall                              | Fix                                              |
-|--------------------------------------|--------------------------------------------------|
-| Infinite loop with `hi = mid` and `lo <= hi` | Use `lo < hi` + `hi = len(nums)` (half-open) |
-| Off-by-one (`mid - 1` vs `mid`)      | Match `hi` init to interval style (closed vs open) |
-| Overflow (C++/Java)                  | `mid = lo + (hi - lo) // 2`                       |
-| Missing duplicates                   | When `nums[lo] == nums[mid] == nums[hi]`, `lo++; hi--` (rotated II) |
-| Predicate not monotonic              | Search-on-answer needs `check(x)` to be monotonic |
+| Pitfall                                         | Fix                                                                    |
+| ----------------------------------------------- | ---------------------------------------------------------------------- |
+| Infinite loop with`hi = mid` and `lo <= hi` | Use`lo < hi` + `hi = len(nums)` (half-open)                        |
+| Off-by-one (`mid - 1` vs `mid`)             | Match`hi` init to interval style (closed vs open)                    |
+| Overflow (C++/Java)                             | `mid = lo + (hi - lo) // 2`                                          |
+| Missing duplicates                              | When`nums[lo] == nums[mid] == nums[hi]`, `lo++; hi--` (rotated II) |
+| Predicate not monotonic                         | Search-on-answer needs`check(x)` to be monotonic                     |
 
 ---
 
 ## Quick reference
 
-| Pattern              | Search space          | Predicate           |
-|----------------------|-----------------------|---------------------|
-| Exact match          | Sorted array          | `==`                |
-| Lower/upper bound    | Sorted array          | `>=` / `>`          |
-| Search on answer     | Answer range          | `check(x)` monotonic |
-| Rotated array        | Sorted-then-rotated   | Which half is sorted |
-| 2D matrix            | `n*m` flat            | Same as 1D          |
-| Peak                 | Unsorted              | Slope direction     |
+| Pattern           | Search space        | Predicate              |
+| ----------------- | ------------------- | ---------------------- |
+| Exact match       | Sorted array        | `==`                 |
+| Lower/upper bound | Sorted array        | `>=` / `>`         |
+| Search on answer  | Answer range        | `check(x)` monotonic |
+| Rotated array     | Sorted-then-rotated | Which half is sorted   |
+| 2D matrix         | `n*m` flat        | Same as 1D             |
+| Peak              | Unsorted            | Slope direction        |
