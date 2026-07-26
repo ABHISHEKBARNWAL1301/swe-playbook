@@ -96,9 +96,9 @@ t.search("app")        # True   (still present)
 
 ## Common problems
 
-- Implement Trie (LC 208)
-- Add and Search Word — wildcard `.` (LC 211)
-- Word Search II — trie + DFS on board (LC 212)
-- Replace Words (LC 648)
-- Longest Word in Dictionary (LC 720)
-- Maximum XOR of Two Numbers in Array — bit trie (LC 421)
+- [Implement Trie (Prefix Tree)](https://leetcode.com/problems/implement-trie-prefix-tree/)
+- [Design Add and Search Words Data Structure](https://leetcode.com/problems/design-add-and-search-words-data-structure/) — wildcard `.`
+- [Word Search II](https://leetcode.com/problems/word-search-ii/) — trie + DFS on board
+- [Replace Words](https://leetcode.com/problems/replace-words/)
+- [Longest Word in Dictionary](https://leetcode.com/problems/longest-word-in-dictionary/)
+- [Maximum XOR of Two Numbers in an Array](https://leetcode.com/problems/maximum-xor-of-two-numbers-in-an-array/) — bit trie
