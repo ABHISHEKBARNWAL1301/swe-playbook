@@ -1,6 +1,6 @@
 # Linear Data Structures
 
-Elements arranged one after another — access is sequential (or index-based via contiguous memory). Covers **arrays/strings** (contiguous, index-addressed) and **stacks & queues** (restricted-access wrappers over that same contiguous storage, or over a deque).
+Elements arranged one after another — access is sequential (or index-based via contiguous memory). Five sections: **Arrays** (index-addressed, the base container), **Strings** (arrays of chars, so every array technique applies), **Hashing** (the O(1) lookup layer built on top of both), and **Stacks** / **Queues** (restricted-access wrappers — LIFO vs FIFO — over that same storage, or over a deque).
 
 ## Contents
 
@@ -11,11 +11,21 @@ Elements arranged one after another — access is sequential (or index-based via
   - [Pattern 3: Sliding Window](#pattern-3-sliding-window)
   - [Pattern 4: Kadane's Algorithm](#pattern-4-kadanes-algorithm)
   - [Pattern 5: 2D Matrix](#pattern-5-2d-matrix)
-  - [Pattern 6: Strings as Arrays](#pattern-6-strings-as-arrays)
-  - [Pattern 7: Hashing as a Tool](#pattern-7-hashing-as-a-tool)
-- [Stacks & Queues](#stacks--queues)
+- [Strings](#strings)
+  - [Frequency counting](#frequency-counting)
+  - [Sliding window + hashmap](#sliding-window--hashmap)
+  - [Rolling hash (Rabin–Karp)](#rolling-hash-rabinkarp)
+  - [Canonical key → hashmap grouping](#canonical-key--hashmap-grouping)
+  - [Two-pointer string tricks](#two-pointer-string-tricks)
+- [Hashing](#hashing)
+  - [Value → index / seen-before map](#value--index--seen-before-map)
+  - [Set for membership / dedup](#set-for-membership--dedup)
+  - [Questions](#questions)
+  - [Quick reference](#quick-reference)
+- [Stacks](#stacks)
   - [Stack (LIFO)](#stack-lifo)
   - [Monotonic Stack — Next Greater / Smaller](#monotonic-stack--next-greater--smaller)
+- [Queues](#queues)
   - [Queue (FIFO)](#queue-fifo)
   - [Monotonic Deque — Sliding Window Max/Min](#monotonic-deque--sliding-window-maxmin)
 
@@ -352,11 +362,11 @@ def search_matrix(M, target):
 
 ---
 
-### Pattern 6: Strings as Arrays
+## Strings
 
 Strings are immutable char arrays, so **every array pattern above applies directly** — two pointers, sliding window, prefix sums. Below are the string-specific idioms, most built on a char-count map. (General hash-table internals — chaining vs open addressing, why O(1) — live in [python.md](python.md#5-dictionary). Sorting itself — built-in, counting sort, merge/quick sort, quickselect — lives in [algorithms.md](algorithms.md#sorting).)
 
-#### Frequency counting
+### Frequency counting
 
 A hashmap (`char → count`) or a fixed-size array (`[0]*26` for lowercase, `[0]*128` for ASCII) answers "is this char count what we need?" in O(1).
 
@@ -375,7 +385,7 @@ def char_count(s):             # fixed-size array — faster for lowercase ASCII
 
 Problems: [First Unique Character in a String](https://leetcode.com/problems/first-unique-character-in-a-string/), [Ransom Note](https://leetcode.com/problems/ransom-note/), [Find the Difference](https://leetcode.com/problems/find-the-difference/).
 
-#### Sliding window + hashmap
+### Sliding window + hashmap
 
 Most "find substring with property X" problems = a variable window over `s` with a `Counter` tracking the window's char counts.
 
@@ -401,7 +411,7 @@ def window_substring(s, target):
 
 Problems: [Minimum Window Substring](https://leetcode.com/problems/minimum-window-substring/), [Longest Substring with At Most K Distinct Characters](https://leetcode.com/problems/longest-substring-with-at-most-k-distinct-characters/), [Permutation in String](https://leetcode.com/problems/permutation-in-string/), [Find All Anagrams in a String](https://leetcode.com/problems/find-all-anagrams-in-a-string/), [Substring with Concatenation of All Words](https://leetcode.com/problems/substring-with-concatenation-of-all-words/).
 
-#### Rolling hash (Rabin–Karp)
+### Rolling hash (Rabin–Karp)
 
 Hash a fixed-size window in O(1) amortized — for substring search, duplicate detection, repeated-DNA. Slide right by dropping the leading char and adding the trailing one:
 
@@ -428,7 +438,7 @@ def rabin_karp(s, t):                  # find t in s
 
 Problems: [Repeated DNA Sequences](https://leetcode.com/problems/repeated-dna-sequences/), [Longest Duplicate Substring](https://leetcode.com/problems/longest-duplicate-substring/), [Find the Index of the First Occurrence in a String](https://leetcode.com/problems/find-the-index-of-the-first-occurrence-in-a-string/).
 
-#### Canonical key → hashmap grouping
+### Canonical key → hashmap grouping
 
 Map each string to a key so strings sharing structure land in the same bucket. **Anagram grouping is the classic case** — the key is the sorted string (or a 26-int count tuple).
 
@@ -462,7 +472,7 @@ def is_isomorphic(s, t):
 
 Problems: [Group Anagrams](https://leetcode.com/problems/group-anagrams/), [Valid Anagram](https://leetcode.com/problems/valid-anagram/), [Isomorphic Strings](https://leetcode.com/problems/isomorphic-strings/), [Word Pattern](https://leetcode.com/problems/word-pattern/), [Group Shifted Strings](https://leetcode.com/problems/group-shifted-strings/).
 
-#### Two-pointer string tricks
+### Two-pointer string tricks
 
 ```python
 def is_palindrome(s):                       # ignore non-alphanumerics, case
@@ -489,11 +499,11 @@ Problems: [Valid Palindrome](https://leetcode.com/problems/valid-palindrome/), [
 
 ---
 
-### Pattern 7: Hashing as a Tool
+## Hashing
 
-A hashmap turns "have I seen this?" / "how many of this?" / "where was this?" from an O(n) scan into an O(1) lookup. Container mechanics (`dict`/`set`/`Counter`, why O(1), collision handling) live in [python.md](python.md#5-dictionary) — this section is just the array/string problems built on top of it. (Anagram grouping, canonical keys, and sliding-window+`Counter` problems are already covered in [Pattern 6](#pattern-6-strings-as-arrays) above.)
+A hashmap turns "have I seen this?" / "how many of this?" / "where was this?" from an O(n) scan into an O(1) lookup. Container mechanics (`dict`/`set`/`Counter`, why O(1), collision handling) live in [python.md](python.md#5-dictionary) — this section is just the array/string problems built on top of it. (Anagram grouping, canonical keys, and sliding-window+`Counter` problems are already covered in [Strings](#strings) above.)
 
-#### Value → index / seen-before map
+### Value → index / seen-before map
 
 ```python
 def two_sum(nums, target):                # value -> index, one pass
@@ -504,7 +514,7 @@ def two_sum(nums, target):                # value -> index, one pass
         seen[x] = i
 ```
 
-#### Set for membership / dedup
+### Set for membership / dedup
 
 ```python
 def longest_consecutive(nums):             # only start counting at run heads
@@ -518,7 +528,7 @@ def longest_consecutive(nums):             # only start counting at run heads
     return best
 ```
 
-#### Questions
+### Questions
 
 - [Two Sum](https://leetcode.com/problems/two-sum/) — value → index map
 - [Contains Duplicate](https://leetcode.com/problems/contains-duplicate/) — set + scan
@@ -553,11 +563,11 @@ def longest_consecutive(nums):             # only start counting at run heads
 
 ---
 
-## Stacks & Queues
+## Stacks
 
-Stack = **LIFO** (use a `list`). Queue = **FIFO** (use `collections.deque`). This section has two parts: the **basic implementations / use cases**, and the **monotonic** variant that shows up for next-greater (stack) and sliding-window extremes (deque).
+**LIFO** — use a plain `list`. This section has two parts: the **basic implementations / use cases**, and the **monotonic** variant that shows up for next-greater / previous-smaller queries.
 
-#### Stack (LIFO)
+### Stack (LIFO)
 
 Push / pop / peek in O(1) — in Python just use a `list`.
 
@@ -569,7 +579,7 @@ st[-1]            # peek
 while st: ...     # empty check
 ```
 
-#### Matching Pairs
+### Matching Pairs
 
 Stack tracks "what we expect to see next." Push openers, pop on closers and check.
 
@@ -586,14 +596,14 @@ def is_valid(s):
     return not stack
 ```
 
-##### Common problems
+#### Common problems
 
 - [Valid Parentheses](https://leetcode.com/problems/valid-parentheses/)
 - [Minimum Remove to Make Valid Parentheses](https://leetcode.com/problems/minimum-remove-to-make-valid-parentheses/)
 - [Longest Valid Parentheses](https://leetcode.com/problems/longest-valid-parentheses/)
 - [Score of Parentheses](https://leetcode.com/problems/score-of-parentheses/)
 
-#### Expression Evaluation
+### Expression Evaluation
 
 **Postfix (RPN)** — straightforward stack eval:
 
@@ -633,14 +643,14 @@ def calculate(s):
     return res + sign * num
 ```
 
-##### Common problems
+#### Common problems
 
 - [Evaluate Reverse Polish Notation](https://leetcode.com/problems/evaluate-reverse-polish-notation/)
 - [Basic Calculator](https://leetcode.com/problems/basic-calculator/)
 - [Basic Calculator II](https://leetcode.com/problems/basic-calculator-ii/)
 - [Decode String](https://leetcode.com/problems/decode-string/)
 
-#### Stack as Recursion Substitute
+### Stack as Recursion Substitute
 
 Iterative DFS. Push the root; while stack: pop, process, push children.
 
@@ -655,14 +665,14 @@ def dfs_iter(root):
         if node.left:  stack.append(node.left)
 ```
 
-##### Common problems
+#### Common problems
 
 - [Binary Tree Inorder Traversal](https://leetcode.com/problems/binary-tree-inorder-traversal/) (iterative)
 - [Binary Tree Preorder Traversal](https://leetcode.com/problems/binary-tree-preorder-traversal/)
 - [Binary Tree Postorder Traversal](https://leetcode.com/problems/binary-tree-postorder-traversal/) (two stacks)
 - [Flatten Nested List Iterator](https://leetcode.com/problems/flatten-nested-list-iterator/)
 
-#### Min Stack — O(1) min
+### Min Stack — O(1) min
 
 Store `(value, current_min)` pairs so the running minimum is always one peek away.
 
@@ -678,13 +688,12 @@ class MinStack:
     def getMin(self): return self.stack[-1][1]
 ```
 
-##### Common problems
+#### Common problems
 
 - [Min Stack](https://leetcode.com/problems/min-stack/)
 - [Max Stack](https://leetcode.com/problems/max-stack/)
 
-
-#### Monotonic Stack — Next Greater / Smaller
+### Monotonic Stack — Next Greater / Smaller
 
 A stack whose values stay in monotonic order. When a new element breaks the order, **pop everything that violates it** — those popped elements just "found" their answer.
 
@@ -697,7 +706,7 @@ push x:
   stack.push(x)
 ```
 
-##### Example: Next Greater Element
+#### Example: Next Greater Element
 
 For each `nums[i]`, find the next index `j > i` with `nums[j] > nums[i]`, else `-1`. Maintain a **decreasing** stack of indices (top = smallest still waiting).
 
@@ -735,7 +744,7 @@ for i in range(2*n):
     if i < n: stack.append(i)
 ```
 
-##### Example: Largest Rectangle in Histogram
+#### Example: Largest Rectangle in Histogram
 
 Maintain an **increasing** stack of indices; when a shorter bar arrives, pop and measure the rectangle each popped bar can form.
 
@@ -771,7 +780,7 @@ def largest_rectangle(heights):
     return best
 ```
 
-##### Common problems
+#### Common problems
 
 - [Next Greater Element I](https://leetcode.com/problems/next-greater-element-i/)
 - [Next Greater Element II](https://leetcode.com/problems/next-greater-element-ii/) (circular)
@@ -784,10 +793,13 @@ def largest_rectangle(heights):
 - [Maximal Rectangle](https://leetcode.com/problems/maximal-rectangle/) (reduce to histogram per row)
 - [Trapping Rain Water](https://leetcode.com/problems/trapping-rain-water/) (also doable with stack)
 
-
 ---
 
-#### Queue (FIFO)
+## Queues
+
+**FIFO** — use `collections.deque`. Same two-part split as Stacks: basic implementations / use cases, then the **monotonic deque** variant for sliding-window extremes.
+
+### Queue (FIFO)
 
 Enqueue at the back, dequeue at the front — use `collections.deque` (O(1) at both ends; `list.pop(0)` is O(n)).
 
@@ -800,7 +812,7 @@ q.appendleft(x)      # push front      O(1)  (deque-only)
 q.pop()              # pop back        O(1)  (deque-only)
 ```
 
-#### BFS
+### BFS
 
 Level-by-level traversal of a tree or graph — the classic shortest-path-by-edges algorithm on unweighted graphs.
 
@@ -818,7 +830,7 @@ def bfs(start):
 
 > BFS problem sets live where they're used: grids / graphs in [non-linear-data-structures.md](non-linear-data-structures.md#graphs), level-order in [non-linear-data-structures.md](non-linear-data-structures.md#trees--bst).
 
-#### Circular Queue / Ring Buffer
+### Circular Queue / Ring Buffer
 
 Fixed-capacity queue using an array + a head index and a size.
 
@@ -849,12 +861,12 @@ class MyCircularQueue:
     def isFull(self):  return self.size == self.cap
 ```
 
-##### Common problems
+#### Common problems
 
 - [Design Circular Queue](https://leetcode.com/problems/design-circular-queue/)
 - [Design Circular Deque](https://leetcode.com/problems/design-circular-deque/)
 
-#### Queue from Two Stacks (and vice versa)
+### Queue from Two Stacks (and vice versa)
 
 **Queue using two stacks** — `in_stack` for pushes; `out_stack` for pops (when empty, pour `in_stack` into it, reversing order). Amortized O(1).
 
@@ -885,15 +897,14 @@ class MyQueue:
 
 **Stack using two queues** — push: enqueue to `q1`, move everything from `q2` into `q1`, swap. Now `q1` front = stack top.
 
-##### Common problems
+#### Common problems
 
 - [Implement Queue using Stacks](https://leetcode.com/problems/implement-queue-using-stacks/)
 - [Implement Stack using Queues](https://leetcode.com/problems/implement-stack-using-queues/)
 
 ---
 
-
-#### Monotonic Deque — Sliding Window Max/Min
+### Monotonic Deque — Sliding Window Max/Min
 
 A deque kept monotonically increasing or decreasing. The front holds the answer for the current window in O(1).
 
@@ -938,7 +949,7 @@ out = [3, 3, 5, 5, 6, 7]
 
 For the **minimum**, flip it: keep the deque **increasing** — pop from back while `nums[back] >= nums[i]`.
 
-##### Common problems
+#### Common problems
 
 - [Sliding Window Maximum](https://leetcode.com/problems/sliding-window-maximum/)
 - [Sliding Window Median](https://leetcode.com/problems/sliding-window-median/) (two heaps; deque doesn't fit)

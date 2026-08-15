@@ -149,7 +149,7 @@ class RandomizedSet:
 
 ### MinStack — O(1) min
 
-Pair each value with the running min, or maintain two stacks. See [linear-data-structures.md](../DSA/linear-data-structures.md#stacks--queues).
+Pair each value with the running min, or maintain two stacks. See [linear-data-structures.md](../DSA/linear-data-structures.md#stacks).
 
 - [Min Stack](https://leetcode.com/problems/min-stack/)
 - [Max Stack](https://leetcode.com/problems/max-stack/) (use sorted container or two stacks + lazy delete)
@@ -162,7 +162,7 @@ Keep a lazy `inc[i]` array — `increment(k, v)` marks `inc[k-1] += v`; `pop` ap
 
 ### Queue from stacks / Stack from queues
 
-See [linear-data-structures.md](../DSA/linear-data-structures.md#stacks--queues).
+See [linear-data-structures.md](../DSA/linear-data-structures.md#stacks).
 
 ---
 
