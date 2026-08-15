@@ -1,6 +1,6 @@
 # Algorithms
 
-Techniques for searching and optimizing over a problem, independent of any one data structure: halve the search space (binary search), make the locally-best choice (greedy), or explore/break-down/memoize the full choice space (recursion, backtracking, divide & conquer, dynamic programming).
+Techniques for searching and optimizing over a problem, independent of any one data structure: order the data (sorting), halve the search space (binary search), make the locally-best choice (greedy), or explore/break-down/memoize the full choice space (recursion, backtracking, dynamic programming).
 
 ## Contents
 
@@ -11,6 +11,12 @@ Techniques for searching and optimizing over a problem, independent of any one d
   - [Pattern 4: Rotated Sorted Array](#pattern-4-rotated-sorted-array)
   - [Pattern 5: 2D Matrix](#pattern-5-2d-matrix)
   - [Pattern 6: Peak / Valley](#pattern-6-peak--valley)
+- [Sorting](#sorting)
+  - [Built-in](#built-in)
+  - [Counting sort — O(n + k)](#counting-sort--on--k)
+  - [Merge Sort](#merge-sort)
+  - [Quick Sort](#quick-sort)
+  - [Quickselect](#quickselect)
 - [Dynamic Programming](#dynamic-programming)
   - [DP vs Greedy: When to Use Which?](#dp-vs-greedy-when-to-use-which)
   - [Pattern 1: Linear DP (1D)](#pattern-1-linear-dp-1d)
@@ -29,10 +35,9 @@ Techniques for searching and optimizing over a problem, independent of any one d
   - [Pattern 3: Jump Game](#pattern-3-jump-game)
   - [Pattern 4: Sorted + Two Pointers](#pattern-4-sorted--two-pointers)
   - [Pattern 5: Greedy + Heap](#pattern-5-greedy--heap)
-- [Recursion, Backtracking & Divide and Conquer](#recursion-backtracking--divide-and-conquer)
+- [Recursion & Backtracking](#recursion--backtracking)
   - [Recursion](#recursion)
   - [Backtracking — Choose / Explore / Unchoose](#backtracking--choose--explore--unchoose)
-  - [Divide & Conquer](#divide--conquer)
 
 ---
 
@@ -289,6 +294,128 @@ def find_peak(nums):
 | Rotated array     | Sorted-then-rotated | Which half is sorted   |
 | 2D matrix         | `n*m` flat        | Same as 1D             |
 | Peak              | Unsorted            | Slope direction        |
+
+---
+
+## Sorting
+
+Ordering the input turns a lot of problems into a scan or a two-pointer walk. Three flavors below: the built-in comparison sort, a non-comparison sort for small integer ranges, and the two classic divide-and-conquer sorts — quickselect rides along with Quick Sort since it's the same partition step, just recursing into one side instead of both.
+
+### Built-in
+
+`nums.sort()` (Timsort) — O(n log n), stable, in-place.
+
+### Counting sort — O(n + k)
+
+When values are small ints in `[0, k]`. Stable, non-comparison.
+
+```python
+def counting_sort(nums, k):
+    count = [0] * (k + 1)
+    for x in nums: count[x] += 1
+    out = []
+    for v, c in enumerate(count):
+        out.extend([v] * c)
+    return out
+```
+
+#### Common sort-then-scan problems
+
+- [Merge Intervals](https://leetcode.com/problems/merge-intervals/)
+- [Insert Interval](https://leetcode.com/problems/insert-interval/)
+- [Non-overlapping Intervals](https://leetcode.com/problems/non-overlapping-intervals/)
+- [Meeting Rooms II](https://leetcode.com/problems/meeting-rooms-ii/)
+- [Largest Number](https://leetcode.com/problems/largest-number/) (custom comparator)
+- [H-Index](https://leetcode.com/problems/h-index/)
+
+---
+
+### Merge Sort
+
+`O(n log n)` time, stable, `O(n)` space. Split in half, sort each half, merge.
+
+```python
+def merge_sort(nums):
+    if len(nums) <= 1:
+        return nums
+    mid = len(nums) // 2
+    left  = merge_sort(nums[:mid])
+    right = merge_sort(nums[mid:])
+    return merge(left, right)
+
+def merge(a, b):
+    out, i, j = [], 0, 0
+    while i < len(a) and j < len(b):
+        if a[i] <= b[j]:
+            out.append(a[i]); i += 1
+        else:
+            out.append(b[j]); j += 1
+    out.extend(a[i:]); out.extend(b[j:])
+    return out
+```
+
+Prefer it when stability matters, for linked lists, or external sorts.
+
+### Quick Sort
+
+`O(n log n)` average, `O(n²)` worst, in-place. Pick a pivot, partition around it, recurse on both sides.
+
+```python
+def quick_sort(nums, lo=0, hi=None):
+    if hi is None:
+        hi = len(nums) - 1
+    if lo >= hi:
+        return
+    p = partition(nums, lo, hi)
+    quick_sort(nums, lo, p - 1)
+    quick_sort(nums, p + 1, hi)
+
+def partition(nums, lo, hi):          # Lomuto: pivot = last element
+    pivot = nums[hi]
+    i = lo
+    for j in range(lo, hi):
+        if nums[j] <= pivot:
+            nums[i], nums[j] = nums[j], nums[i]
+            i += 1
+    nums[i], nums[hi] = nums[hi], nums[i]
+    return i
+```
+
+Avoid the `O(n²)` worst case by randomizing the pivot or using median-of-three.
+
+### Quickselect
+
+`O(n)` average. Find the k-th smallest without fully sorting — partition, then recurse into **one** side only.
+
+```python
+def quickselect(nums, k):             # k is 0-indexed
+    lo, hi = 0, len(nums) - 1
+    while lo <= hi:
+        p = partition(nums, lo, hi)
+        if p == k:
+            return nums[p]
+        if p < k:
+            lo = p + 1
+        else:
+            hi = p - 1
+```
+
+> **Count inversions** is a merge-sort variant: while merging, each element taken from the right half forms an inversion with every element still left in the left half.
+
+#### Common problems
+
+- [Sort an Array](https://leetcode.com/problems/sort-an-array/)
+- [Kth Largest Element in an Array](https://leetcode.com/problems/kth-largest-element-in-an-array/) (quickselect or heap)
+- [Count of Smaller Numbers After Self](https://leetcode.com/problems/count-of-smaller-numbers-after-self/) (merge-sort)
+- [Reverse Pairs](https://leetcode.com/problems/reverse-pairs/)
+- [Maximum Subarray](https://leetcode.com/problems/maximum-subarray/) (D&C version)
+- [Merge k Sorted Lists](https://leetcode.com/problems/merge-k-sorted-lists/) (pairwise merge, or heap — see [non-linear-data-structures.md](non-linear-data-structures.md#heaps))
+- [Sort List](https://leetcode.com/problems/sort-list/) (merge sort on a linked list)
+- [Median of Two Sorted Arrays](https://leetcode.com/problems/median-of-two-sorted-arrays/) (binary-search partition)
+- [Different Ways to Add Parentheses](https://leetcode.com/problems/different-ways-to-add-parentheses/) (split at each operator)
+- [Longest Substring with At Least K Repeating Characters](https://leetcode.com/problems/longest-substring-with-at-least-k-repeating-characters/) (split on rare chars)
+- [The Skyline Problem](https://leetcode.com/problems/the-skyline-problem/) (merge half-skylines)
+- [Count of Range Sum](https://leetcode.com/problems/count-of-range-sum/) (merge-sort on prefix sums)
 
 ---
 
@@ -1825,11 +1952,10 @@ def huffman(freqs):
 
 ---
 
-## Recursion, Backtracking & Divide and Conquer
+## Recursion & Backtracking
 
 Recursion = define `f(input)` in terms of `f(smaller_input)` + base case.  
-Backtracking = recursion + "undo choice and try another."    
-Divide & conquer = recursion + "split, solve halves, combine."
+Backtracking = recursion + "undo choice and try another."
 
 ---
 
@@ -1960,95 +2086,3 @@ For permutations, the "same level" check becomes: skip `nums[i]` if `nums[i] == 
 - [Remove Invalid Parentheses](https://leetcode.com/problems/remove-invalid-parentheses/)
 - [Restore IP Addresses](https://leetcode.com/problems/restore-ip-addresses/)
 
----
-
-### Divide & Conquer
-
-**Divide** into independent subproblems → **conquer** each recursively → **combine** the results. The cost follows the recurrence `T(n) = a·T(n/b) + f(n)`.
-
-#### Merge Sort
-
-`O(n log n)` time, stable, `O(n)` space. Split in half, sort each half, merge.
-
-```python
-def merge_sort(nums):
-    if len(nums) <= 1:
-        return nums
-    mid = len(nums) // 2
-    left  = merge_sort(nums[:mid])
-    right = merge_sort(nums[mid:])
-    return merge(left, right)
-
-def merge(a, b):
-    out, i, j = [], 0, 0
-    while i < len(a) and j < len(b):
-        if a[i] <= b[j]:
-            out.append(a[i]); i += 1
-        else:
-            out.append(b[j]); j += 1
-    out.extend(a[i:]); out.extend(b[j:])
-    return out
-```
-
-Prefer it when stability matters, for linked lists, or external sorts.
-
-#### Quick Sort
-
-`O(n log n)` average, `O(n²)` worst, in-place. Pick a pivot, partition around it, recurse on both sides.
-
-```python
-def quick_sort(nums, lo=0, hi=None):
-    if hi is None:
-        hi = len(nums) - 1
-    if lo >= hi:
-        return
-    p = partition(nums, lo, hi)
-    quick_sort(nums, lo, p - 1)
-    quick_sort(nums, p + 1, hi)
-
-def partition(nums, lo, hi):          # Lomuto: pivot = last element
-    pivot = nums[hi]
-    i = lo
-    for j in range(lo, hi):
-        if nums[j] <= pivot:
-            nums[i], nums[j] = nums[j], nums[i]
-            i += 1
-    nums[i], nums[hi] = nums[hi], nums[i]
-    return i
-```
-
-Avoid the `O(n²)` worst case by randomizing the pivot or using median-of-three.
-
-#### Quickselect
-
-`O(n)` average. Find the k-th smallest without fully sorting — partition, then recurse into **one** side only.
-
-```python
-def quickselect(nums, k):             # k is 0-indexed
-    lo, hi = 0, len(nums) - 1
-    while lo <= hi:
-        p = partition(nums, lo, hi)
-        if p == k:
-            return nums[p]
-        if p < k:
-            lo = p + 1
-        else:
-            hi = p - 1
-```
-
-> **Count inversions** is a merge-sort variant: while merging, each element taken from the right half forms an inversion with every element still left in the left half.
-
-#### Common problems
-
-- [Sort an Array](https://leetcode.com/problems/sort-an-array/)
-- [Kth Largest Element in an Array](https://leetcode.com/problems/kth-largest-element-in-an-array/) (quickselect or heap)
-- [Count of Smaller Numbers After Self](https://leetcode.com/problems/count-of-smaller-numbers-after-self/) (merge-sort)
-- [Reverse Pairs](https://leetcode.com/problems/reverse-pairs/)
-- [Maximum Subarray](https://leetcode.com/problems/maximum-subarray/) (D&C version)
-- [Merge k Sorted Lists](https://leetcode.com/problems/merge-k-sorted-lists/) (pairwise merge, or heap — see [non-linear-data-structures.md](non-linear-data-structures.md#heaps))
-- [Sort List](https://leetcode.com/problems/sort-list/) (merge sort on a linked list)
-- [Median of Two Sorted Arrays](https://leetcode.com/problems/median-of-two-sorted-arrays/) (binary-search partition)
-- [Different Ways to Add Parentheses](https://leetcode.com/problems/different-ways-to-add-parentheses/) (split at each operator)
-- [Longest Substring with At Least K Repeating Characters](https://leetcode.com/problems/longest-substring-with-at-least-k-repeating-characters/) (split on rare chars)
-- [The Skyline Problem](https://leetcode.com/problems/the-skyline-problem/) (merge half-skylines)
-- [Count of Range Sum](https://leetcode.com/problems/count-of-range-sum/) (merge-sort on prefix sums)

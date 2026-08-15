@@ -11,9 +11,8 @@ Elements arranged one after another — access is sequential (or index-based via
   - [Pattern 3: Sliding Window](#pattern-3-sliding-window)
   - [Pattern 4: Kadane's Algorithm](#pattern-4-kadanes-algorithm)
   - [Pattern 5: 2D Matrix](#pattern-5-2d-matrix)
-  - [Pattern 6: Sorting Essentials](#pattern-6-sorting-essentials)
-  - [Pattern 7: Strings as Arrays](#pattern-7-strings-as-arrays)
-  - [Pattern 8: Hashing as a Tool](#pattern-8-hashing-as-a-tool)
+  - [Pattern 6: Strings as Arrays](#pattern-6-strings-as-arrays)
+  - [Pattern 7: Hashing as a Tool](#pattern-7-hashing-as-a-tool)
 - [Stacks & Queues](#stacks--queues)
   - [Stack (LIFO)](#stack-lifo)
   - [Monotonic Stack — Next Greater / Smaller](#monotonic-stack--next-greater--smaller)
@@ -353,40 +352,9 @@ def search_matrix(M, target):
 
 ---
 
-### Pattern 6: Sorting Essentials
+### Pattern 6: Strings as Arrays
 
-#### Built-in
-
-`nums.sort()` (Timsort) — O(n log n), stable, in-place.
-
-#### Counting sort — O(n + k)
-
-When values are small ints in `[0, k]`. Stable, non-comparison.
-
-```python
-def counting_sort(nums, k):
-    count = [0] * (k + 1)
-    for x in nums: count[x] += 1
-    out = []
-    for v, c in enumerate(count):
-        out.extend([v] * c)
-    return out
-```
-
-#### Common sort-then-scan problems
-
-- [Merge Intervals](https://leetcode.com/problems/merge-intervals/)
-- [Insert Interval](https://leetcode.com/problems/insert-interval/)
-- [Non-overlapping Intervals](https://leetcode.com/problems/non-overlapping-intervals/)
-- [Meeting Rooms II](https://leetcode.com/problems/meeting-rooms-ii/)
-- [Largest Number](https://leetcode.com/problems/largest-number/) (custom comparator)
-- [H-Index](https://leetcode.com/problems/h-index/)
-
----
-
-### Pattern 7: Strings as Arrays
-
-Strings are immutable char arrays, so **every array pattern above applies directly** — two pointers, sliding window, prefix sums. Below are the string-specific idioms, most built on a char-count map. (General hash-table internals — chaining vs open addressing, why O(1) — live in [python.md](python.md#5-dictionary).)
+Strings are immutable char arrays, so **every array pattern above applies directly** — two pointers, sliding window, prefix sums. Below are the string-specific idioms, most built on a char-count map. (General hash-table internals — chaining vs open addressing, why O(1) — live in [python.md](python.md#5-dictionary). Sorting itself — built-in, counting sort, merge/quick sort, quickselect — lives in [algorithms.md](algorithms.md#sorting).)
 
 #### Frequency counting
 
@@ -521,9 +489,9 @@ Problems: [Valid Palindrome](https://leetcode.com/problems/valid-palindrome/), [
 
 ---
 
-### Pattern 8: Hashing as a Tool
+### Pattern 7: Hashing as a Tool
 
-A hashmap turns "have I seen this?" / "how many of this?" / "where was this?" from an O(n) scan into an O(1) lookup. Container mechanics (`dict`/`set`/`Counter`, why O(1), collision handling) live in [python.md](python.md#5-dictionary) — this section is just the array/string problems built on top of it. (Anagram grouping, canonical keys, and sliding-window+`Counter` problems are already covered in [Pattern 7](#pattern-7-strings-as-arrays) above.)
+A hashmap turns "have I seen this?" / "how many of this?" / "where was this?" from an O(n) scan into an O(1) lookup. Container mechanics (`dict`/`set`/`Counter`, why O(1), collision handling) live in [python.md](python.md#5-dictionary) — this section is just the array/string problems built on top of it. (Anagram grouping, canonical keys, and sliding-window+`Counter` problems are already covered in [Pattern 6](#pattern-6-strings-as-arrays) above.)
 
 #### Value → index / seen-before map
 
@@ -578,8 +546,6 @@ def longest_consecutive(nums):             # only start counting at run heads
 | Fixed window         | "Subarray of size k with..."               | O(n)         |
 | Variable window      | "Longest/shortest subarray with condition" | O(n)         |
 | Kadane               | Max/min contiguous subarray                | O(n)         |
-| Sort + scan          | Intervals, custom ordering                 | O(n log n)   |
-| Counting sort        | Small int range                            | O(n + k)     |
 | Char counting        | Anagrams, freq — `Counter` or `[0]*26`     | O(n)         |
 | Rolling hash         | Substring search / dup detection           | O(n)         |
 | Expand from center   | Longest palindromic substring              | O(n²)        |
