@@ -1,0 +1,49 @@
+<svg viewBox="0 0 780 420" xmlns="http://www.w3.org/2000/svg" font-family="Menlo, Consolas, monospace">
+  <style>
+    .title { font-size: 15px; font-weight: bold; fill: #111; }
+    .sub { font-size: 13px; font-weight: bold; fill: #333; }
+    .note { font-size: 12px; fill: #444; }
+    .node { stroke: #333; stroke-width: 1.5; fill: #eef4fb; }
+    .leaf { stroke: #333; stroke-width: 1.5; fill: #ffffff; }
+    .target { fill: #a7d8a0; }
+    .proof { fill: #f4c542; }
+    .lbl { font-size: 11.5px; fill: #111; }
+    .edge { stroke: #ccc; stroke-width: 1.4; }
+    .path { stroke: #2e7d32; stroke-width: 2.2; }
+  </style>
+
+  <!-- TOP: Merkle proof -->
+  <text x="20" y="26" class="title">1. Merkle proof — verify Block 3 with 2 sibling hashes, not the whole tree</text>
+
+  <rect x="330" y="45" width="110" height="40" rx="6" class="node target"/>
+  <text x="385" y="70" text-anchor="middle" class="lbl" font-weight="bold">Root (known)</text>
+
+  <rect x="200" y="120" width="110" height="40" rx="6" class="node proof"/>
+  <text x="255" y="145" text-anchor="middle" class="lbl" font-weight="bold">H12 (provided)</text>
+
+  <rect x="460" y="120" width="110" height="40" rx="6" class="node"/>
+  <text x="515" y="145" text-anchor="middle" class="lbl">H34 (computed)</text>
+
+  <rect x="400" y="195" width="90" height="36" rx="6" class="node target"/>
+  <text x="445" y="217" text-anchor="middle" class="lbl" font-weight="bold">H3 (computed)</text>
+
+  <rect x="530" y="195" width="90" height="36" rx="6" class="node proof"/>
+  <text x="575" y="217" text-anchor="middle" class="lbl" font-weight="bold">H4 (provided)</text>
+
+  <rect x="400" y="265" width="90" height="36" rx="4" class="leaf target"/>
+  <text x="445" y="287" text-anchor="middle" class="lbl" font-weight="bold">Block 3</text>
+
+  <path d="M385,85  L255,120" class="edge"/>
+  <path d="M385,85  L515,120" class="path"/>
+  <path d="M515,160 L445,195" class="path"/>
+  <path d="M515,160 L575,195" class="edge"/>
+  <path d="M445,231 L445,265" class="path"/>
+
+  <text x="20" y="325" class="note">proof = [H4, H12] → compute H3 → H34 = H(H3+H4) → Root = H(H12+H34) → compare to known root</text>
+
+  <line x1="20" y1="345" x2="760" y2="345" stroke="#ccc" stroke-width="1"/>
+
+  <!-- BOTTOM: tree diff sync -->
+  <text x="20" y="372" class="title">2. Tree diff — compare roots, skip matching branches, descend into mismatches</text>
+  <text x="20" y="392" class="note">Root differs → H12 matches (skip Blocks 1,2) → H34 differs → descend → Block 3 is the mismatch</text>
+</svg>

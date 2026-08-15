@@ -1,0 +1,62 @@
+<svg viewBox="0 0 780 380" xmlns="http://www.w3.org/2000/svg" font-family="Menlo, Consolas, monospace">
+  <style>
+    .title { font-size: 15px; font-weight: bold; fill: #111; }
+    .sub { font-size: 13px; font-weight: bold; fill: #333; }
+    .note { font-size: 12px; fill: #444; }
+    .box { stroke: #333; stroke-width: 1.5; }
+    .filter-full { fill: #f4c542; }
+    .filter-new { fill: #a7d8a0; }
+    .filter-shard { fill: #b9d3f2; }
+    .arrow { stroke: #555; stroke-width: 1.6; fill: none; marker-end: url(#arr); }
+    .lbl { font-size: 12px; fill: #222; }
+  </style>
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#555"/>
+    </marker>
+  </defs>
+
+  <!-- LEFT: Scalable Bloom Filter (chained) -->
+  <text x="20" y="28" class="title">1. Scalable Bloom Filter — chain new filters as old ones fill</text>
+
+  <rect x="20"  y="55" width="110" height="70" rx="6" class="box filter-full"/>
+  <text x="75" y="85" text-anchor="middle" class="lbl" font-weight="bold">Filter 1</text>
+  <text x="75" y="102" text-anchor="middle" class="note">FULL (n items)</text>
+
+  <rect x="160" y="55" width="110" height="70" rx="6" class="box filter-new"/>
+  <text x="215" y="85" text-anchor="middle" class="lbl" font-weight="bold">Filter 2</text>
+  <text x="215" y="102" text-anchor="middle" class="note">active, tighter p</text>
+
+  <rect x="300" y="55" width="110" height="70" rx="6" class="box" fill="#eeeeee" stroke-dasharray="4,3"/>
+  <text x="355" y="85" text-anchor="middle" class="lbl" font-weight="bold">Filter 3</text>
+  <text x="355" y="102" text-anchor="middle" class="note">added when F2 fills</text>
+
+  <path d="M130,90 L158,90" class="arrow"/>
+  <path d="M270,90 L298,90" class="arrow"/>
+
+  <text x="20" y="155" class="note">check(x) = filter1.has(x) OR filter2.has(x) OR filter3.has(x) …</text>
+  <text x="20" y="173" class="note">no full rebuild needed — each filter is immutable once retired</text>
+
+  <!-- divider -->
+  <line x1="20" y1="200" x2="760" y2="200" stroke="#ccc" stroke-width="1"/>
+
+  <!-- RIGHT/BOTTOM: Sharding by key -->
+  <text x="20" y="230" class="title">2. Shard by key — one filter per node, sized for its own slice</text>
+
+  <rect x="60"  y="255" width="180" height="90" rx="8" class="box filter-shard"/>
+  <text x="150" y="280" text-anchor="middle" class="lbl" font-weight="bold">Node A</text>
+  <text x="150" y="298" text-anchor="middle" class="note">keys hash % 3 == 0</text>
+  <text x="150" y="315" text-anchor="middle" class="note">own bloom filter</text>
+
+  <rect x="300" y="255" width="180" height="90" rx="8" class="box filter-shard"/>
+  <text x="390" y="280" text-anchor="middle" class="lbl" font-weight="bold">Node B</text>
+  <text x="390" y="298" text-anchor="middle" class="note">keys hash % 3 == 1</text>
+  <text x="390" y="315" text-anchor="middle" class="note">own bloom filter</text>
+
+  <rect x="540" y="255" width="180" height="90" rx="8" class="box filter-shard"/>
+  <text x="630" y="280" text-anchor="middle" class="lbl" font-weight="bold">Node C</text>
+  <text x="630" y="298" text-anchor="middle" class="note">keys hash % 3 == 2</text>
+  <text x="630" y="315" text-anchor="middle" class="note">own bloom filter</text>
+
+  <text x="20" y="365" class="note">router hashes the key first → asks only the owning node's filter (no cross-node broadcast)</text>
+</svg>

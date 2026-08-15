@@ -1,3 +1,16 @@
+## How to Approach a Design Problem
+
+
+
+ 1: Clarify the Requirements - functional and non-functional.   
+ 2: Estimate the Scale - BOTE calculation, QPS, data size, etc.   
+ 3: Identify the Core Components - databases, caches, load balancers, etc.   
+ 4: Define the API - input, output, and error handling.  
+ 5: Design the Data Model - schema, relationships, and indexing.  
+ 6: Write LLD - class diagrams, sequence diagrams, etc (optional).   
+ 7: Identify Bottlenecks, Failure Modes, Trade-offs.  
+
+
 # Data Structure Design
 
 Compose existing structures (hashmap + linked list + heap + array) to support a custom interface in optimal time per op. Most of these problems are about picking the **right two structures** that complement each other.
@@ -136,7 +149,7 @@ class RandomizedSet:
 
 ### MinStack — O(1) min
 
-Pair each value with the running min, or maintain two stacks. See [stacks-queue.md](stacks-queue.md).
+Pair each value with the running min, or maintain two stacks. See [linear-data-structures.md](../DSA/linear-data-structures.md#stacks--queues).
 
 - [Min Stack](https://leetcode.com/problems/min-stack/)
 - [Max Stack](https://leetcode.com/problems/max-stack/) (use sorted container or two stacks + lazy delete)
@@ -149,13 +162,13 @@ Keep a lazy `inc[i]` array — `increment(k, v)` marks `inc[k-1] += v`; `pop` ap
 
 ### Queue from stacks / Stack from queues
 
-See [stacks-queue.md](stacks-queue.md).
+See [linear-data-structures.md](../DSA/linear-data-structures.md#stacks--queues).
 
 ---
 
 ## Pattern 5: Trie-based Design
 
-Trie powers fast prefix queries. See [trie.md](trie.md).
+Trie powers fast prefix queries. See [non-linear-data-structures.md](../DSA/non-linear-data-structures.md#trie).
 
 ### Use cases
 
@@ -359,13 +372,13 @@ class UndergroundSystem:
 - [Design a Leaderboard](https://leetcode.com/problems/design-a-leaderboard/) (hashmap `player → score`; sort or heap for top-K)
 - [Design Authentication Manager](https://leetcode.com/problems/design-authentication-manager/) (hashmap `token → expiry`)
 - [Design Tic-Tac-Toe](https://leetcode.com/problems/design-tic-tac-toe/) (per-row/col/diagonal counters, ±1 per move)
-- [Design HashMap](https://leetcode.com/problems/design-hashmap/) / [Design HashSet](https://leetcode.com/problems/design-hashset/) (implement the primitive — see [hashing.md](hashing.md))
+- [Design HashMap](https://leetcode.com/problems/design-hashmap/) / [Design HashSet](https://leetcode.com/problems/design-hashset/) (implement the primitive — see [python.md](../DSA/python.md#5-dictionary))
 
 ---
 
 ## Pattern 11: Union-Find (Disjoint Set Union)
 
-Not strictly a "design" problem, but commonly required for design questions about dynamic connectivity. See [graph.md](graph.md).
+Not strictly a "design" problem, but commonly required for design questions about dynamic connectivity. See [non-linear-data-structures.md](../DSA/non-linear-data-structures.md#graphs).
 
 - [Number of Connected Components](https://leetcode.com/problems/number-of-connected-components-in-an-undirected-graph/)
 - [Accounts Merge](https://leetcode.com/problems/accounts-merge/)

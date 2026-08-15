@@ -452,8 +452,8 @@ Property graph database structure its data with three core elements: **nodes** (
   # Arjun --[ENROLLED_IN]--> ch_1     props={}
   ```
 - UseCases
-  ![Graph Social Network Intro](./static/images/graph-social-network-intro.png)
-  ![Graph Social Network Use Case](./static/images/graph-social-network-usecase.png)
+  ![Graph Social Network Intro](../static/images/graph-social-network-intro.png)
+  ![Graph Social Network Use Case](../static/images/graph-social-network-usecase.png)
 
 ## **RDF (Resource Description Framework)**
 
@@ -508,3 +508,5 @@ It is hard to scale graph databases because graphs are connected — splitting t
 **Sharding only works well when** the graph has natural isolated subgraphs — multi-tenant apps where each tenant is its own graph, or geographic splits where cross-region relationships are rare.
 
 **Default advice:** scale vertically first. Only shard if you have a natural partition boundary — otherwise the cross-partition traversal cost kills the performance gains.
+
+Bloom filters — a common first-check structure in front of database lookups — moved to [scalable-data-structures.md](../DSA/scalable-data-structures.md).

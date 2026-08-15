@@ -1,0 +1,121 @@
+<svg viewBox="0 0 780 420" xmlns="http://www.w3.org/2000/svg" font-family="Menlo, Consolas, monospace">
+  <style>
+    .title { font-size: 15px; font-weight: bold; fill: #111; }
+    .sub { font-size: 12.5px; font-weight: bold; fill: #333; }
+    .note { font-size: 11.5px; fill: #444; }
+    .track { stroke: #999; stroke-width: 2; }
+    .mark { stroke: #333; stroke-width: 1.5; }
+    .hi { fill: #a7d8a0; }
+    .lo { fill: #eeeeee; }
+    .bitbox { stroke: #333; stroke-width: 1.3; }
+    .lonbit { fill: #b9d3f2; }
+    .latbit { fill: #f6c6c6; }
+    .charbox { stroke: #333; stroke-width: 1.6; fill: #f4c542; }
+    .lbl { font-size: 12px; fill: #111; }
+  </style>
+
+  <text x="20" y="26" class="title">Geohash encoding — point (19.0760, 72.8777) → "te…"</text>
+
+  <!-- Longitude range halving -->
+  <text x="20" y="55" class="sub">longitude: -180 → 180, target 72.8777 (bit = 1 if ≥ midpoint)</text>
+  <g transform="translate(20,65)" font-size="11">
+    <!-- step 1 -->
+    <rect x="0" y="0" width="150" height="20" class="lo"/>
+    <rect x="75" y="0" width="75" height="20" class="hi"/>
+    <rect x="0" y="0" width="150" height="20" fill="none" class="mark"/>
+    <text x="75" y="34" text-anchor="middle" class="note">mid 0 → bit 1</text>
+
+    <rect x="170" y="0" width="150" height="20" class="lo"/>
+    <rect x="170" y="0" width="75" height="20" class="hi"/>
+    <rect x="170" y="0" width="150" height="20" fill="none" class="mark"/>
+    <text x="245" y="34" text-anchor="middle" class="note">mid 90 → bit 0</text>
+
+    <rect x="340" y="0" width="150" height="20" class="lo"/>
+    <rect x="415" y="0" width="75" height="20" class="hi"/>
+    <rect x="340" y="0" width="150" height="20" fill="none" class="mark"/>
+    <text x="415" y="34" text-anchor="middle" class="note">mid 45 → bit 1</text>
+
+    <rect x="510" y="0" width="150" height="20" class="lo"/>
+    <rect x="510" y="0" width="75" height="20" class="hi"/>
+    <rect x="510" y="0" width="150" height="20" fill="none" class="mark"/>
+    <text x="585" y="34" text-anchor="middle" class="note">mid 67.5 → bit 1</text>
+
+    <rect x="680" y="0" width="80" height="20" class="lo"/>
+    <rect x="680" y="0" width="40" height="20" class="hi"/>
+    <rect x="680" y="0" width="80" height="20" fill="none" class="mark"/>
+    <text x="720" y="34" text-anchor="middle" class="note">bit 0</text>
+  </g>
+  <text x="20" y="120" class="lbl">longitude bits → 1 0 1 1 0</text>
+
+  <!-- Latitude range halving -->
+  <text x="20" y="150" class="sub">latitude: -90 → 90, target 19.0760 (bit = 1 if ≥ midpoint)</text>
+  <g transform="translate(20,160)" font-size="11">
+    <rect x="0" y="0" width="150" height="20" class="lo"/>
+    <rect x="75" y="0" width="75" height="20" class="hi"/>
+    <rect x="0" y="0" width="150" height="20" fill="none" class="mark"/>
+    <text x="75" y="34" text-anchor="middle" class="note">mid 0 → bit 1</text>
+
+    <rect x="170" y="0" width="150" height="20" class="hi"/>
+    <rect x="245" y="0" width="75" height="20" class="lo"/>
+    <rect x="170" y="0" width="150" height="20" fill="none" class="mark"/>
+    <text x="245" y="34" text-anchor="middle" class="note">mid 45 → bit 0</text>
+
+    <rect x="340" y="0" width="150" height="20" class="hi"/>
+    <rect x="415" y="0" width="75" height="20" class="lo"/>
+    <rect x="340" y="0" width="150" height="20" fill="none" class="mark"/>
+    <text x="415" y="34" text-anchor="middle" class="note">mid 22.5 → bit 0</text>
+
+    <rect x="510" y="0" width="150" height="20" class="lo"/>
+    <rect x="510" y="0" width="75" height="20" class="hi"/>
+    <rect x="510" y="0" width="150" height="20" fill="none" class="mark"/>
+    <text x="585" y="34" text-anchor="middle" class="note">mid 11.25 → bit 1</text>
+
+    <rect x="680" y="0" width="80" height="20" class="lo"/>
+    <rect x="680" y="0" width="40" height="20" class="hi"/>
+    <rect x="680" y="0" width="80" height="20" fill="none" class="mark"/>
+    <text x="720" y="34" text-anchor="middle" class="note">bit 1</text>
+  </g>
+  <text x="20" y="215" class="lbl">latitude bits  → 1 0 0 1 1</text>
+
+  <!-- Interleave -->
+  <text x="20" y="248" class="sub">interleave (longitude first): lon₁ lat₁ lon₂ lat₂ lon₃ lat₃ lon₄ lat₄ lon₅ lat₅</text>
+  <g transform="translate(20,258)">
+    <rect x="0"   y="0" width="34" height="28" class="bitbox lonbit"/>
+    <rect x="36"  y="0" width="34" height="28" class="bitbox latbit"/>
+    <rect x="72"  y="0" width="34" height="28" class="bitbox lonbit"/>
+    <rect x="108" y="0" width="34" height="28" class="bitbox latbit"/>
+    <rect x="144" y="0" width="34" height="28" class="bitbox lonbit"/>
+    <rect x="180" y="0" width="34" height="28" class="bitbox latbit"/>
+    <rect x="216" y="0" width="34" height="28" class="bitbox lonbit"/>
+    <rect x="252" y="0" width="34" height="28" class="bitbox latbit"/>
+    <rect x="288" y="0" width="34" height="28" class="bitbox lonbit"/>
+    <rect x="324" y="0" width="34" height="28" class="bitbox latbit"/>
+    <text x="17"  y="19" text-anchor="middle" class="lbl">1</text>
+    <text x="53"  y="19" text-anchor="middle" class="lbl">1</text>
+    <text x="89"  y="19" text-anchor="middle" class="lbl">0</text>
+    <text x="125" y="19" text-anchor="middle" class="lbl">0</text>
+    <text x="161" y="19" text-anchor="middle" class="lbl">1</text>
+    <text x="197" y="19" text-anchor="middle" class="lbl">0</text>
+    <text x="233" y="19" text-anchor="middle" class="lbl">1</text>
+    <text x="269" y="19" text-anchor="middle" class="lbl">1</text>
+    <text x="305" y="19" text-anchor="middle" class="lbl">0</text>
+    <text x="341" y="19" text-anchor="middle" class="lbl">1</text>
+    <!-- grouping brackets of 5 -->
+    <path d="M0,34 L0,40 L178,40 L178,34" fill="none" class="mark"/>
+    <path d="M180,34 L180,40 L358,40 L358,34" fill="none" class="mark"/>
+    <text x="89"  y="54" text-anchor="middle" class="note">11001 = 25 = "t"</text>
+    <text x="269" y="54" text-anchor="middle" class="note">01101 = 13 = "e"</text>
+  </g>
+
+  <!-- base32 chars -->
+  <text x="20" y="335" class="sub">base32-encode each 5-bit group (alphabet skips a, i, l, o)</text>
+  <g transform="translate(20,345)">
+    <rect x="0"  y="0" width="46" height="40" rx="6" class="charbox"/>
+    <text x="23" y="26" text-anchor="middle" font-size="18" font-weight="bold">t</text>
+    <rect x="54" y="0" width="46" height="40" rx="6" class="charbox"/>
+    <text x="77" y="26" text-anchor="middle" font-size="18" font-weight="bold">e</text>
+    <rect x="108" y="0" width="46" height="40" rx="6" fill="none" stroke="#999" stroke-dasharray="4,3"/>
+    <text x="131" y="26" text-anchor="middle" font-size="16" fill="#999">…</text>
+    <text x="220" y="26" class="note">→ geohash "te7ud2ev" (8 chars, further bits continue the same way)</text>
+  </g>
+</svg>

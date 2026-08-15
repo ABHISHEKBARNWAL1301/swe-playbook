@@ -1,0 +1,89 @@
+<svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg" font-family="Menlo, Consolas, monospace">
+  <style>
+    .bit { stroke: #333; stroke-width: 1.5; fill: #ffffff; }
+    .bit-on { stroke: #333; stroke-width: 1.5; fill: #a7d8a0; }
+    .bit-hit { stroke: #333; stroke-width: 1.5; fill: #f4c542; }
+    .lbl { font-size: 13px; fill: #222; }
+    .idx { font-size: 11px; fill: #666; }
+    .title { font-size: 15px; font-weight: bold; fill: #111; }
+    .arrow-add { stroke: #2e7d32; stroke-width: 1.6; fill: none; marker-end: url(#arrowAdd); }
+    .arrow-miss { stroke: #c62828; stroke-width: 1.6; fill: none; marker-end: url(#arrowMiss); }
+    .note { font-size: 12px; fill: #444; }
+  </style>
+  <defs>
+    <marker id="arrowAdd" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#2e7d32"/>
+    </marker>
+    <marker id="arrowMiss" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#c62828"/>
+    </marker>
+  </defs>
+
+  <text x="20" y="28" class="title">Bloom Filter — bit array, m = 12, k = 3</text>
+
+  <!-- bit array 0..11 -->
+  <g transform="translate(60,60)">
+    <!-- indices -->
+    <text x="0"  y="-8" class="idx">0</text>
+    <text x="52" y="-8" class="idx">1</text>
+    <text x="104" y="-8" class="idx">2</text>
+    <text x="156" y="-8" class="idx">3</text>
+    <text x="208" y="-8" class="idx">4</text>
+    <text x="260" y="-8" class="idx">5</text>
+    <text x="312" y="-8" class="idx">6</text>
+    <text x="364" y="-8" class="idx">7</text>
+    <text x="416" y="-8" class="idx">8</text>
+    <text x="468" y="-8" class="idx">9</text>
+    <text x="520" y="-8" class="idx">10</text>
+    <text x="572" y="-8" class="idx">11</text>
+
+    <!-- boxes: bit 2,5,9 set (green = set by "apple") -->
+    <rect x="0"   y="0" width="40" height="40" class="bit"/>
+    <rect x="52"  y="0" width="40" height="40" class="bit"/>
+    <rect x="104" y="0" width="40" height="40" class="bit-on"/>
+    <rect x="156" y="0" width="40" height="40" class="bit"/>
+    <rect x="208" y="0" width="40" height="40" class="bit"/>
+    <rect x="260" y="0" width="40" height="40" class="bit-on"/>
+    <rect x="312" y="0" width="40" height="40" class="bit"/>
+    <rect x="364" y="0" width="40" height="40" class="bit"/>
+    <rect x="416" y="0" width="40" height="40" class="bit"/>
+    <rect x="468" y="0" width="40" height="40" class="bit-on"/>
+    <rect x="520" y="0" width="40" height="40" class="bit"/>
+    <rect x="572" y="0" width="40" height="40" class="bit"/>
+
+    <!-- values -->
+    <text x="20"  y="26" text-anchor="middle" class="lbl">0</text>
+    <text x="72"  y="26" text-anchor="middle" class="lbl">0</text>
+    <text x="124" y="26" text-anchor="middle" class="lbl">1</text>
+    <text x="176" y="26" text-anchor="middle" class="lbl">0</text>
+    <text x="228" y="26" text-anchor="middle" class="lbl">0</text>
+    <text x="280" y="26" text-anchor="middle" class="lbl">1</text>
+    <text x="332" y="26" text-anchor="middle" class="lbl">0</text>
+    <text x="384" y="26" text-anchor="middle" class="lbl">0</text>
+    <text x="436" y="26" text-anchor="middle" class="lbl">0</text>
+    <text x="488" y="26" text-anchor="middle" class="lbl">1</text>
+    <text x="540" y="26" text-anchor="middle" class="lbl">0</text>
+    <text x="592" y="26" text-anchor="middle" class="lbl">0</text>
+  </g>
+
+  <!-- add("apple") -->
+  <text x="20" y="145" class="lbl" font-weight="bold">add("apple")</text>
+  <text x="20" y="163" class="note">hash1=2  hash2=5  hash3=9  → set those bits</text>
+  <path d="M110,150 Q170,175 184,100" class="arrow-add"/>
+  <path d="M110,150 Q290,190 340,100" class="arrow-add"/>
+  <path d="M110,150 Q420,205 548,100" class="arrow-add"/>
+
+  <!-- check("apple") -->
+  <text x="20" y="205" class="lbl" font-weight="bold">check("apple")</text>
+  <text x="20" y="223" class="note">bits 2, 5, 9 all 1 → "probably present" ✓</text>
+
+  <!-- check("pear") -->
+  <text x="20" y="260" class="lbl" font-weight="bold">check("pear")</text>
+  <text x="20" y="278" class="note">hash1=2  hash2=7  hash3=9</text>
+  <path d="M110,265 Q170,240 184,60" class="arrow-miss"/>
+  <path d="M110,265 Q250,180 384,45" class="arrow-miss"/>
+  <path d="M110,265 Q420,220 548,60" class="arrow-miss"/>
+  <rect x="424" y="60" width="40" height="40" fill="none" stroke="#c62828" stroke-width="2.5" stroke-dasharray="4,3"/>
+  <text x="20" y="300" class="note" fill="#c62828">bit 7 is 0 → "definitely not present" (no false negatives)</text>
+
+</svg>

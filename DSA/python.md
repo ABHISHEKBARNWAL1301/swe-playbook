@@ -1,10 +1,10 @@
-# Python for DSA
+# Python
 
-Built-in containers and the standard-library tools you reach for in interviews. Each section: what it maps to, the operations that matter, complexity, and the gotchas that bite.
+Built-in containers, standard-library tools, and language internals you're expected to know cold in interviews. Each container section: what it maps to, the operations that matter, complexity, and the gotchas that bite. The last section covers language-level questions (GIL, generators, decorators, ...) asked outside of DSA problems.
 
 ## Covered
 
-`list` · `tuple` · `str` · `dict` · `set` · `deque` · `stack/queue` · `Counter` · `defaultdict` · `heapq` · `slicing` · `comprehensions` · `iterables toolkit` · `lambda` · `functools cache`
+`list` · `tuple` · `str` · `dict` · `set` · `deque` · `stack/queue` · `Counter` · `defaultdict` · `heapq` · `slicing` · `comprehensions` · `iterables toolkit` · `lambda` · `functools cache` · `generators` · `decorators` · `GIL`
 
 ---
 
@@ -161,6 +161,27 @@ A dict is backed by a **hash table**: a flat array of slots. To store `d[k] = v`
 
 Lookup repeats the same arithmetic to jump straight to slot `i` — no scan. That's the O(1): a hash + a mod + one array access, independent of how many keys exist.
 
+### Wait — doesn't "jumping to slot `i`" itself take time?
+
+No, and this is the load-bearing fact behind every hash-table claim. An array is a **contiguous block of memory** of fixed-size slots. The address of slot `i` is computed directly:
+
+```
+addr(i) = base_address + i * slot_size
+```
+
+That's one multiplication and one addition — constant time, **independent of `i` or of `n`**. The CPU then reads the value at that address in one memory operation. There's no "walk to position `i`" step.
+
+```
+slot:        0      1      2      3      4      5
+memory:   [ ... ][ ... ][ ... ][ ... ][ ... ][ ... ]
+          ▲                    ▲
+          base                 base + 3 * slot_size   ← jump straight here
+```
+
+Contrast with a **linked list**: nodes are scattered in memory, so reaching node `i` means following `i` pointers — O(i). That's why `list[i]` in Python (array-backed) is O(1) but walking a `ListNode` chain to index `i` is O(n).
+
+> **Asymptotically O(1), not "literally free."** A real read still pays for cache misses, page faults, and (for disk-backed hash tables / DB indexes) actual disk seeks. But none of those scale with `n` — they're constants the Big-O hides.
+
 The catch: two different keys can land on the same slot (`h1 % cap == h2 % cap`). That's a **collision**, and how you resolve it defines the table.
 
 ### Chaining
@@ -282,6 +303,13 @@ cnt[x]                  # count (0 if absent)
 cnt.most_common(k)      # top-k as [(val, count), ...]
 cnt.most_common()[-1]   # least common
 list(cnt.elements())    # expand back to elements
+```
+
+```python
+c1 + c2    # add counts (drops <= 0 results)
+c1 - c2    # subtract, keep only > 0
+c1 & c2    # min of each shared key (multiset intersection)
+c1 | c2    # max of each (multiset union)
 ```
 
 Anagram check in one line: `Counter(s) == Counter(t)`.
@@ -461,6 +489,113 @@ def solve(grid):
 
     return dp(0, 0)
 ```
+
+---
+
+# 15. Python Interview — Language Internals & Gotchas
+
+Questions interviewers probe beyond DSA problems — how the language itself works.
+
+### `is` vs `==`
+
+`==` compares **values** (calls `__eq__`); `is` compares **identity** (same object in memory).
+
+```python
+a = [1, 2]
+b = [1, 2]
+a == b        # True  — same value
+a is b        # False — different objects
+a is a        # True
+
+# small ints (-5..256) and short strings are cached/interned — `is` can look True by accident
+x = 256; y = 256
+x is y        # True  (cached)
+x = 257; y = 257
+x is y        # False (usually) — never rely on this
+```
+
+> Use `is` only for `None` / `True` / `False` singleton checks (`if x is None`). Use `==` for everything else.
+
+### Iterators vs iterables
+
+An **iterable** has `__iter__` (can hand out an iterator: `list`, `dict`, `str`, ...). An **iterator** has `__next__` (produces values one at a time, remembers position, raises `StopIteration` when done). Every iterator is an iterable; not every iterable is an iterator.
+
+```python
+it = iter([1, 2, 3])    # list (iterable) → iterator
+next(it)                 # 1
+next(it)                 # 2
+for x in [1, 2, 3]: ...  # `for` calls iter() then next() under the hood
+```
+
+### Generators — `yield`
+
+A function with `yield` returns a **generator** (an iterator) instead of running to completion. Each `next()` call resumes right after the last `yield` — state is preserved between calls without storing the whole sequence.
+
+```python
+def count_up_to(n):
+    i = 1
+    while i <= n:
+        yield i
+        i += 1
+
+for x in count_up_to(3): print(x)   # 1 2 3, one at a time
+```
+
+- **Lazy** — values are produced on demand, so `count_up_to(10**9)` runs in O(1) memory, not O(n).
+- A **generator expression** `(x*x for x in nums)` is the lazy counterpart of a list comprehension — same syntax minus the brackets, one value at a time instead of the whole list built up front. Reach for it when you'll iterate once and don't need a list (e.g. piping straight into `sum`/`any`/`all` — see [Iterables toolkit](#11-iterables-toolkit)).
+- Once exhausted, a generator can't be restarted — call the function again for a fresh one.
+
+### `*args` / `**kwargs`
+
+Collect a variable number of positional / keyword arguments into a `tuple` / `dict`.
+
+```python
+def f(*args, **kwargs):
+    print(args)       # tuple of positional args
+    print(kwargs)      # dict of keyword args
+
+f(1, 2, a=3, b=4)      # args=(1, 2), kwargs={'a': 3, 'b': 4}
+```
+
+The same `*` / `**` **unpack** at a call site — the reverse direction:
+
+```python
+nums = [1, 2, 3]
+print(*nums)           # unpacks: print(1, 2, 3)
+d = {'a': 1, 'b': 2}
+f(**d)                 # unpacks: f(a=1, b=2)
+```
+
+### Decorators
+
+A decorator wraps a function to add behavior without changing its code. `@dec` above `def f` is sugar for `f = dec(f)`.
+
+```python
+def timer(fn):
+    def wrapper(*args, **kwargs):
+        import time
+        start = time.time()
+        result = fn(*args, **kwargs)
+        print(f"{fn.__name__} took {time.time()-start:.4f}s")
+        return result
+    return wrapper
+
+@timer
+def slow(): ...
+```
+
+`@cache` / `@lru_cache` (section 14 above) are the decorators you'll actually reach for in interviews.
+
+### The GIL (Global Interpreter Lock)
+
+CPython's GIL lets only **one thread execute Python bytecode at a time**, even on a multi-core machine.
+
+| Workload  | Use                       | Why                                                    |
+| --------- | -------------------------- | ------------------------------------------------------- |
+| I/O-bound | `threading` / `asyncio`   | a thread releases the GIL while waiting on network/disk |
+| CPU-bound | `multiprocessing`         | separate processes → separate GILs → true parallelism   |
+
+`threading` alone does **not** speed up CPU-bound work — every thread still fights over the one GIL.
 
 ---
 

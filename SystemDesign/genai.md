@@ -1,6 +1,80 @@
+gi
+
+```python
+import streamlit as st
+from langchain import hub
+from langchain.text_splitter import CharacterTextSplitter
+from langchain.embeddings import OpenAIEmbeddings
+from langchain.vectorstores import Chroma
+from langchain_core.runnables import RunnablePassthrough
+from langchain_core.output_parsers import StrOutputParser
+from langchain_openai import ChatOpenAI
+
+# Specify the filename of your local image
+
+image_filename = 'Educative.png'
+
+# Use st.image to display the image
+
+st.image(image_filename, use_column_width=True)
+
+def format_docs(docs):
+    return "\n\n".join(doc.page_content for doc in docs)
+
+def generate_response(uploaded_file, openai_api_key, query_text):
+    # Load document if file is uploaded
+    if uploaded_file is not None:
+        documents = [uploaded_file.read().decode()]
+        # Split documents into chunks
+        text_splitter = CharacterTextSplitter(chunk_size=500, chunk_overlap=100)
+        texts = text_splitter.create_documents(documents)
+        llm = ChatOpenAI(model="gpt-4o", openai_api_key=openai_api_key)
+        # Select embeddings
+        embeddings = OpenAIEmbeddings(model="text-embedding-3-small", openai_api_key=openai_api_key)
+        # Create a vectorstore from documents
+        database = Chroma.from_documents(texts, embeddings)
+        # Create retriever interface
+        retriever = database.as_retriever()
+        prompt = hub.pull("rlm/rag-prompt")
+        rag_chain = (
+            {"context": retriever | format_docs, "question": RunnablePassthrough()}
+            | prompt
+            | llm
+            | StrOutputParser()
+)
+        # Create QA chain
+        response = rag_chain.invoke(query_text)
+        return response
+
+# File upload
+
+uploaded_file = st.file_uploader('Upload an article', type='txt')
+
+# Query text
+
+query_text = st.text_input('Enter your question:', placeholder = 'Please provide a short summary.', disabled=not uploaded_file)
+
+# Form input and query
+
+result = None
+with st.form('myform', clear_on_submit=False, border=False):
+    openai_api_key = st.text_input('OpenAI API Key', type='password', disabled=not (uploaded_file and query_text))
+    submitted = st.form_submit_button('Submit', disabled=not(uploaded_file and query_text))
+    if submitted and openai_api_key.startswith('sk-'):
+        with st.spinner('Calculating...'):
+            response = generate_response(uploaded_file, openai_api_key, query_text)
+            result = response
+if result:
+    st.info(result)
+```
+
+
+
+
+
 - **MCP (Model Context Protocol)**
 
-  ![alt text](../../static/images/mcp_arctitecture.png)
+  ![alt text](../static/images/mcp_arctitecture.png)
 
   - **Purpose**: A **standard protocol** that defines **how an LLM can call external tools/APIs**
   - MCP changes the shape of that problem. A tool team can expose its capability once as an MCP server. An AI application can implement MCP client support once, then connect to compatible servers without writing a custom adapter for each one. Compatibility is not guaranteed; clients still differ in transport support, authentication support, approval UX, and feature coverage. But the protocol gives both sides a shared contract.
@@ -35,11 +109,11 @@
   How a Request Flows
   When a user asks a question that requires external data, here is the full sequence:
 
-  ![alt text](../../static/images/mcp_connection.png)
+  ![alt text](../static/images/mcp_connection.png)
 
   # **The Three Primitives**
 
-  ![alt text](../../static/images/mcp_primitives.png)
+  ![alt text](../static/images/mcp_primitives.png)
 
   At the heart of the MCP, the following are three fundamental components that inform how an AI agent interacts with the outside world:
 
@@ -192,6 +266,6 @@
   Before writing code, get the boundary right. MCP has three roles: the host (your application), the client (the MCP protocol handler inside the host), and the server (the capability provider). When you build a custom MCP client in an application, you are usually building both the host and the client.
 
   Here is how everything connects when you wire MCP into an LLM application:
-  ![alt text](../../static/images/mcp_client.png)
+  ![alt text](../static/images/mcp_client.png)
 
-![alt text](../../static/images/mcp-lifecycle.png)
+![alt text](../static/images/mcp-lifecycle.png)

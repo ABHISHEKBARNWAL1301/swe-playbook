@@ -1,0 +1,70 @@
+<svg viewBox="0 0 780 400" xmlns="http://www.w3.org/2000/svg" font-family="Menlo, Consolas, monospace">
+  <style>
+    .title { font-size: 15px; font-weight: bold; fill: #111; }
+    .note { font-size: 12px; fill: #444; }
+    .node { stroke: #333; stroke-width: 1.5; fill: #eef4fb; }
+    .leaf { stroke: #333; stroke-width: 1.5; fill: #ffffff; }
+    .changed { fill: #f4c542; }
+    .root { fill: #a7d8a0; }
+    .lbl { font-size: 12px; fill: #111; }
+    .sub { font-size: 10.5px; fill: #555; }
+    .edge { stroke: #888; stroke-width: 1.4; }
+    .cascade { stroke: #c62828; stroke-width: 2.2; }
+  </style>
+
+  <text x="20" y="26" class="title">Merkle Tree — changing Block 3 cascades up to the root</text>
+
+  <!-- Root -->
+  <rect x="330" y="45" width="120" height="46" rx="6" class="node root"/>
+  <text x="390" y="65" text-anchor="middle" class="lbl" font-weight="bold">Root</text>
+  <text x="390" y="80" text-anchor="middle" class="sub">H(H12 + H34)</text>
+
+  <!-- level 2 -->
+  <rect x="180" y="130" width="110" height="44" rx="6" class="node"/>
+  <text x="235" y="150" text-anchor="middle" class="lbl">H12</text>
+  <text x="235" y="164" text-anchor="middle" class="sub">H(H1+H2)</text>
+
+  <rect x="490" y="130" width="110" height="44" rx="6" class="node changed"/>
+  <text x="545" y="150" text-anchor="middle" class="lbl" font-weight="bold">H34</text>
+  <text x="545" y="164" text-anchor="middle" class="sub">H(H3+H4) — changed</text>
+
+  <!-- level 1 -->
+  <rect x="80"  y="215" width="90" height="40" rx="6" class="node"/>
+  <text x="125" y="240" text-anchor="middle" class="lbl">H1</text>
+
+  <rect x="290" y="215" width="90" height="40" rx="6" class="node"/>
+  <text x="335" y="240" text-anchor="middle" class="lbl">H2</text>
+
+  <rect x="490" y="215" width="90" height="40" rx="6" class="node changed"/>
+  <text x="535" y="240" text-anchor="middle" class="lbl" font-weight="bold">H3 — changed</text>
+
+  <rect x="600" y="215" width="90" height="40" rx="6" class="node"/>
+  <text x="645" y="240" text-anchor="middle" class="lbl">H4</text>
+
+  <!-- leaves -->
+  <rect x="80"  y="300" width="90" height="40" rx="4" class="leaf"/>
+  <text x="125" y="325" text-anchor="middle" class="sub">Block 1</text>
+
+  <rect x="290" y="300" width="90" height="40" rx="4" class="leaf"/>
+  <text x="335" y="325" text-anchor="middle" class="sub">Block 2</text>
+
+  <rect x="490" y="300" width="90" height="40" rx="4" class="leaf changed"/>
+  <text x="535" y="325" text-anchor="middle" class="sub" font-weight="bold">Block 3 — edited</text>
+
+  <rect x="600" y="300" width="90" height="40" rx="4" class="leaf"/>
+  <text x="645" y="325" text-anchor="middle" class="sub">Block 4</text>
+
+  <!-- normal edges -->
+  <path d="M235,130 L180,174" class="edge"/>
+  <path d="M235,130 L290,174" class="edge"/>
+  <path d="M125,215 L125,255" class="edge"/>
+  <path d="M335,215 L335,255" class="edge"/>
+  <path d="M645,215 L645,255" class="edge"/>
+
+  <!-- cascade path (red) -->
+  <path d="M390,91  L545,130" class="cascade"/>
+  <path d="M545,174 L545,215" class="cascade"/>
+  <path d="M535,255 L535,300" class="cascade"/>
+
+  <text x="20" y="380" class="note">only the path from Block 3 to the root recomputes — H1, H2, H4, and H12 are untouched</text>
+</svg>
