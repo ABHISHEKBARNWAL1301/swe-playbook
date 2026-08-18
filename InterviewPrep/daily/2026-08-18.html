@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>SDE2 Daily Prep — Day 1</title>
+</head>
+<body style="margin:0;background:#f3f6fb;color:#172033;font-family:Arial,Helvetica,sans-serif;">
+  <div style="display:none;max-height:0;overflow:hidden;color:transparent;">Day 1 starts the 90-day SDE2 program with hashmap, sliding-window, and system-design framework practice.</div>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f3f6fb;">
+    <tr><td align="center" style="padding:24px 12px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:660px;background:#ffffff;border-radius:16px;overflow:hidden;border:1px solid #dfe6f1;">
+        <tr><td style="padding:28px;background:#102a56;color:#ffffff;">
+          <div style="font-size:12px;letter-spacing:1.4px;text-transform:uppercase;color:#a9c7ff;">SDE2 Interview Program · Day 1/90</div>
+          <h1 style="margin:8px 0 10px;font-size:27px;line-height:1.25;">Baseline: Hashmaps, Sliding Windows, Design Loop</h1>
+          <div style="font-size:14px;color:#dbe8ff;">18 Aug 2026 · 06:00-08:30 IST</div>
+          <div style="margin-top:18px;">
+            <span style="display:inline-block;margin:0 6px 6px 0;padding:7px 10px;border-radius:999px;background:#21457c;font-size:12px;">150 min total</span>
+            <span style="display:inline-block;margin:0 6px 6px 0;padding:7px 10px;border-radius:999px;background:#21457c;font-size:12px;">DSA · 60 min</span>
+            <span style="display:inline-block;margin:0 6px 6px 0;padding:7px 10px;border-radius:999px;background:#f6b73c;color:#172033;font-size:12px;font-weight:bold;">Design · 90 min</span>
+          </div>
+        </td></tr>
+        <tr><td style="padding:24px 28px;">
+          <div style="margin:0 0 18px;padding:14px 16px;border:1px solid #dfe6f1;border-radius:12px;background:#fbfdff;">
+            <div style="font-size:13px;line-height:1.55;color:#33415c;">Today establishes your baseline. Keep the DSA attempts honest under timers, then practice leading an open-ended design conversation with a small, familiar service.</div>
+          </div>
+
+          <h2 style="margin:0 0 10px;font-size:18px;color:#102a56;">Agenda</h2>
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin:0 0 20px;font-size:13px;">
+            <tr>
+              <th align="left" style="padding:9px;border:1px solid #dfe6f1;background:#eef3fa;color:#102a56;">Time</th>
+              <th align="left" style="padding:9px;border:1px solid #dfe6f1;background:#eef3fa;color:#102a56;">Block</th>
+              <th align="left" style="padding:9px;border:1px solid #dfe6f1;background:#eef3fa;color:#102a56;">Evidence</th>
+            </tr>
+            <tr><td style="padding:9px;border:1px solid #dfe6f1;">06:00-06:15</td><td style="padding:9px;border:1px solid #dfe6f1;">Two Sum</td><td style="padding:9px;border:1px solid #dfe6f1;">Attempt, invariant, complexity</td></tr>
+            <tr><td style="padding:9px;border:1px solid #dfe6f1;">06:15-06:45</td><td style="padding:9px;border:1px solid #dfe6f1;">Longest Substring Without Repeating Characters</td><td style="padding:9px;border:1px solid #dfe6f1;">Window invariant, edge cases</td></tr>
+            <tr><td style="padding:9px;border:1px solid #dfe6f1;">06:45-07:00</td><td style="padding:9px;border:1px solid #dfe6f1;">DSA review</td><td style="padding:9px;border:1px solid #dfe6f1;">Solved / Hint / Unsolved</td></tr>
+            <tr><td style="padding:9px;border:1px solid #dfe6f1;">07:00-07:25</td><td style="padding:9px;border:1px solid #dfe6f1;">Targeted reading</td><td style="padding:9px;border:1px solid #dfe6f1;">Framework notes</td></tr>
+            <tr><td style="padding:9px;border:1px solid #dfe6f1;">07:25-08:15</td><td style="padding:9px;border:1px solid #dfe6f1;">Design artifact</td><td style="padding:9px;border:1px solid #dfe6f1;">Progress dashboard design</td></tr>
+            <tr><td style="padding:9px;border:1px solid #dfe6f1;">08:15-08:30</td><td style="padding:9px;border:1px solid #dfe6f1;">Trade-off review</td><td style="padding:9px;border:1px solid #dfe6f1;">Rubric and repair item</td></tr>
+          </table>
+
+          <div style="margin:0 0 18px;padding:16px;border:1px solid #dfe6f1;border-radius:12px;background:#ffffff;">
+            <h2 style="margin:0 0 8px;font-size:18px;color:#102a56;">DSA · 60 minutes</h2>
+            <div style="margin:0 0 12px;padding:12px;border-left:4px solid #2e7d6f;background:#f5fbf9;">
+              <div style="font-weight:bold;color:#172033;">Two Sum <span style="font-size:12px;color:#5e6b82;">Easy · hard stop 15 min</span></div>
+              <p style="margin:8px 0 10px;font-size:13px;line-height:1.55;color:#33415c;">Concept cues: value-to-index hashmap, complement lookup, one-pass scan, duplicate handling.</p>
+              <a href="https://leetcode.com/problems/two-sum/" style="display:inline-block;padding:9px 12px;border-radius:8px;background:#102a56;color:#ffffff;text-decoration:none;font-size:13px;font-weight:bold;">Open Two Sum</a>
+            </div>
+            <div style="margin:0;padding:12px;border-left:4px solid #7a5af8;background:#f8f7ff;">
+              <div style="font-weight:bold;color:#172033;">Longest Substring Without Repeating Characters <span style="font-size:12px;color:#5e6b82;">Medium · hard stop 30 min</span></div>
+              <p style="margin:8px 0 10px;font-size:13px;line-height:1.55;color:#33415c;">Concept cues: variable-size sliding window, last-seen index map, left boundary monotonicity, substring versus subsequence.</p>
+              <a href="https://leetcode.com/problems/longest-substring-without-repeating-characters/" style="display:inline-block;padding:9px 12px;border-radius:8px;background:#102a56;color:#ffffff;text-decoration:none;font-size:13px;font-weight:bold;">Open Longest Substring</a>
+            </div>
+          </div>
+
+          <div style="margin:20px 0;padding:14px 16px;border-radius:12px;background:#fff4e5;border:1px solid #ffd79b;text-align:center;">
+            <div style="font-size:16px;font-weight:bold;color:#7a4300;">STOP — hints below</div>
+            <div style="font-size:12px;color:#7a4300;margin-top:4px;">Do not read until one-third, two-thirds, or timer expiry.</div>
+          </div>
+
+          <div style="margin:0 0 18px;padding:16px;border:1px solid #dfe6f1;border-radius:12px;background:#ffffff;">
+            <h2 style="margin:0 0 10px;font-size:18px;color:#102a56;">Hint Ladder</h2>
+            <div style="font-size:13px;line-height:1.55;color:#33415c;">
+              <p style="margin:0 0 8px;"><strong>Two Sum 1:</strong> Ask what value would complete the current number before deciding where to store it.</p>
+              <p style="margin:0 0 8px;"><strong>Two Sum 2:</strong> After each index, the map should represent only usable earlier indices.</p>
+              <p style="margin:0 0 12px;"><strong>Two Sum 3:</strong> Scan left to right; return on a seen complement, otherwise record the current value.</p>
+              <p style="margin:0 0 8px;"><strong>Longest Substring 1:</strong> Track the earliest valid start of the current duplicate-free substring.</p>
+              <p style="margin:0 0 8px;"><strong>Longest Substring 2:</strong> Move the left pointer only past duplicates still inside the current window.</p>
+              <p style="margin:0;"><strong>Longest Substring 3:</strong> Repair the left boundary, update last seen, then compute the best valid window length.</p>
+            </div>
+          </div>
+
+          <div style="margin:0 0 18px;padding:16px;border:1px solid #dfe6f1;border-radius:12px;background:#ffffff;">
+            <h2 style="margin:0 0 8px;font-size:18px;color:#102a56;">Engineering · Design Mode</h2>
+            <p style="margin:0 0 10px;font-size:13px;line-height:1.55;color:#33415c;"><strong>07:00-07:25 Read:</strong> SystemDesign/problems.md from "How to Approach a Design Problem" through step 7, then "How to attack a design problem" through "Build it incrementally". Companion: System Design Primer's approach section through back-of-envelope calculations.</p>
+            <p style="margin:0 0 10px;font-size:13px;line-height:1.55;color:#33415c;"><strong>Pre-reading questions:</strong> What ambiguity is the interviewer testing? Which choices must be explicit before drawing boxes? Which scale assumptions change storage, cache, and API choices?</p>
+            <p style="margin:0 0 10px;font-size:13px;line-height:1.55;color:#33415c;"><strong>07:25-08:15 Design:</strong> A study-progress dashboard service for the 90-day program: daily outcomes, engineering evidence, confidence, review dates, and readiness metrics.</p>
+            <p style="margin:0 0 12px;font-size:13px;line-height:1.55;color:#33415c;"><strong>08:15-08:30 Review:</strong> Defend two trade-offs, score the rubric, and choose one repair item.</p>
+            <a href="https://github.com/donnemartin/system-design-primer#how-to-approach-a-system-design-interview-question" style="display:inline-block;padding:9px 12px;border-radius:8px;background:#102a56;color:#ffffff;text-decoration:none;font-size:13px;font-weight:bold;">Open companion reading</a>
+          </div>
+
+          <div style="margin:0 0 18px;padding:16px;border:1px solid #dfe6f1;border-radius:12px;background:#fbfdff;">
+            <h2 style="margin:0 0 10px;font-size:18px;color:#102a56;">Knowledge Check</h2>
+            <ol style="margin:0;padding-left:20px;font-size:13px;line-height:1.6;color:#33415c;">
+              <li>What question would you ask first if the prompt is underspecified?</li>
+              <li>Which estimate matters more: daily active users, write frequency, or dashboard read frequency?</li>
+              <li>What changes if the dashboard must support team cohorts instead of one person?</li>
+              <li>Where would caching help, and what stale-data behavior is acceptable?</li>
+              <li>Which failure mode would you proactively call out in an SDE2 interview?</li>
+            </ol>
+          </div>
+
+          <div style="margin:0;padding:16px;border:1px solid #dfe6f1;border-radius:12px;background:#eef3fa;">
+            <h2 style="margin:0 0 10px;font-size:18px;color:#102a56;">Reply Checklist</h2>
+            <ul style="margin:0;padding-left:20px;font-size:13px;line-height:1.6;color:#33415c;">
+              <li>Two DSA outcomes: Solved, Hint, or Unsolved.</li>
+              <li>One missed edge case or speed bottleneck.</li>
+              <li>Design rubric scores out of five.</li>
+              <li>Two trade-offs defended in one sentence each.</li>
+              <li>One repair item and next review date.</li>
+            </ul>
+          </div>
+        </td></tr>
+        <tr><td style="padding:18px 28px;background:#eef3fa;color:#5e6b82;font-size:12px;line-height:1.5;">
+          Built from the swe-playbook · Keep replies short: outcomes, mistakes, trade-offs, score, confidence.
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>

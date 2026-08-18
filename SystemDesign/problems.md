@@ -10,6 +10,20 @@
  6: Write LLD - class diagrams, sequence diagrams, etc (optional).   
  7: Identify Bottlenecks, Failure Modes, Trade-offs.  
 
+## SDE2 design interview loop
+
+Use the first five minutes to turn ambiguity into a contract: state the user, the core user journeys, explicit non-goals, traffic shape, data volume, latency/availability expectations, and consistency requirements. Only then draw components.
+
+Reusable artifact order:
+
+1. Requirements and non-goals.
+2. Back-of-the-envelope estimates: requests per second, storage growth, read/write ratio, and hot keys.
+3. API surface and data model.
+4. High-level architecture and main request flow.
+5. Bottlenecks, failure modes, observability, and trade-offs.
+
+For each design decision, say what it optimizes and what it makes worse. SDE2 signal comes from defending constraints, not from naming components.
+
 
 # Data Structure Design
 
