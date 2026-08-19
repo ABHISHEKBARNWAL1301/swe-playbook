@@ -24,6 +24,15 @@ Reusable artifact order:
 
 For each design decision, say what it optimizes and what it makes worse. SDE2 signal comes from defending constraints, not from naming components.
 
+### Requirements, APIs, and estimates checklist
+
+Before architecture, pin down the contract:
+
+- Requirements: name the primary actor, top two user journeys, explicit non-goals, latency target, availability target, consistency expectation, privacy/security constraint, and operational visibility needed.
+- API surface: model nouns first, then standard operations. Use custom verbs only when the action cannot be represented cleanly as create, get, list, update, or delete.
+- Estimate loop: state assumption, formula, result, and design consequence for QPS, read/write ratio, storage growth, hot-key risk, bandwidth, and cacheable working set.
+- Interview defense: when an assumption is uncertain, give a reasonable range and say which component would change if the high end is true.
+
 
 # Data Structure Design
 

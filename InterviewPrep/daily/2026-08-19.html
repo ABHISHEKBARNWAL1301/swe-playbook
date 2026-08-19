@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>SDE2 Prep Day 02</title>
+</head>
+<body style="margin:0;background:#f3f6fb;color:#172033;font-family:Arial,Helvetica,sans-serif;">
+  <div style="display:none;max-height:0;overflow:hidden;color:transparent;">Day 02: prefix products, prefix-sum counting, and a Deep Read on requirements, API shape, and estimates.</div>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f3f6fb;">
+    <tr><td align="center" style="padding:24px 12px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:660px;background:#ffffff;border-radius:16px;overflow:hidden;border:1px solid #dfe6f1;">
+        <tr><td style="padding:28px;background:#102a56;color:#ffffff;">
+          <div style="font-size:12px;letter-spacing:1.4px;text-transform:uppercase;color:#a9c7ff;">SDE2 Interview Program &middot; Day 02/90</div>
+          <h1 style="margin:8px 0 10px;font-size:27px;line-height:1.25;">Requirements, API Shape, and BOTE Estimates</h1>
+          <div style="font-size:14px;color:#dbe8ff;">2026-08-19 &middot; 06:00-08:30 IST</div>
+          <div style="margin-top:18px;">
+            <span style="display:inline-block;margin:0 6px 6px 0;padding:7px 10px;border-radius:999px;background:#21457c;font-size:12px;">150 min total</span>
+            <span style="display:inline-block;margin:0 6px 6px 0;padding:7px 10px;border-radius:999px;background:#21457c;font-size:12px;">DSA &middot; 60 min</span>
+            <span style="display:inline-block;margin:0 6px 6px 0;padding:7px 10px;border-radius:999px;background:#f6b73c;color:#172033;font-size:12px;font-weight:bold;">Deep Read &middot; 90 min</span>
+          </div>
+        </td></tr>
+        <tr><td style="padding:24px 28px;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 18px;background:#f8fafd;border:1px solid #e3eaf4;border-radius:12px;">
+            <tr><td style="padding:16px 18px;">
+              <div style="font-size:13px;font-weight:bold;color:#102a56;text-transform:uppercase;letter-spacing:.6px;">Today at a glance</div>
+              <p style="margin:8px 0 0;font-size:15px;line-height:1.55;">Two medium DSA timers, then a bounded Deep Read that converts ambiguity into requirements, resource-shaped APIs, and estimates. No implementation is required today.</p>
+            </td></tr>
+          </table>
+
+          <h2 style="margin:0 0 10px;font-size:18px;color:#102a56;">Agenda</h2>
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin:0 0 22px;font-size:14px;">
+            <tr>
+              <th align="left" style="padding:10px;border:1px solid #dfe6f1;background:#eef3fa;color:#102a56;">Time</th>
+              <th align="left" style="padding:10px;border:1px solid #dfe6f1;background:#eef3fa;color:#102a56;">Block</th>
+              <th align="left" style="padding:10px;border:1px solid #dfe6f1;background:#eef3fa;color:#102a56;">Evidence</th>
+            </tr>
+            <tr><td style="padding:10px;border:1px solid #dfe6f1;">06:00-06:30</td><td style="padding:10px;border:1px solid #dfe6f1;">Product of Array Except Self</td><td style="padding:10px;border:1px solid #dfe6f1;">Prefix/suffix invariant and edge cases</td></tr>
+            <tr><td style="padding:10px;border:1px solid #dfe6f1;">06:30-07:00</td><td style="padding:10px;border:1px solid #dfe6f1;">Subarray Sum Equals K</td><td style="padding:10px;border:1px solid #dfe6f1;">Prefix-count invariant and negative-number case</td></tr>
+            <tr><td style="padding:10px;border:1px solid #dfe6f1;">07:00-07:55</td><td style="padding:10px;border:1px solid #dfe6f1;">Guided reading</td><td style="padding:10px;border:1px solid #dfe6f1;">AIP notes plus bounded estimation notes</td></tr>
+            <tr><td style="padding:10px;border:1px solid #dfe6f1;">07:55-08:17</td><td style="padding:10px;border:1px solid #dfe6f1;">Closed-book synthesis</td><td style="padding:10px;border:1px solid #dfe6f1;">Requirements/API/estimation page</td></tr>
+            <tr><td style="padding:10px;border:1px solid #dfe6f1;">08:17-08:30</td><td style="padding:10px;border:1px solid #dfe6f1;">Recall test</td><td style="padding:10px;border:1px solid #dfe6f1;">Five answers, score, repair item</td></tr>
+          </table>
+
+          <h2 style="margin:0 0 10px;font-size:18px;color:#102a56;">DSA - 60 Minutes</h2>
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 14px;border:1px solid #dfe6f1;border-radius:12px;">
+            <tr><td style="padding:16px 18px;">
+              <div style="font-size:12px;color:#5e6b82;text-transform:uppercase;letter-spacing:.5px;">Medium &middot; Hard stop: 30 minutes</div>
+              <h3 style="margin:6px 0 8px;font-size:17px;color:#172033;">Product of Array Except Self</h3>
+              <p style="margin:0 0 12px;font-size:14px;line-height:1.55;">Concept cues: prefix product, suffix product, writable output array, zero reasoning, O(n) time, no division.</p>
+              <a href="https://leetcode.com/problems/product-of-array-except-self/" style="display:inline-block;background:#0f766e;color:#ffffff;text-decoration:none;border-radius:8px;padding:10px 14px;font-size:14px;font-weight:bold;">Open LeetCode problem</a>
+            </td></tr>
+          </table>
+
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 18px;border:1px solid #dfe6f1;border-radius:12px;">
+            <tr><td style="padding:16px 18px;">
+              <div style="font-size:12px;color:#5e6b82;text-transform:uppercase;letter-spacing:.5px;">Medium &middot; Hard stop: 30 minutes</div>
+              <h3 style="margin:6px 0 8px;font-size:17px;color:#172033;">Subarray Sum Equals K</h3>
+              <p style="margin:0 0 12px;font-size:14px;line-height:1.55;">Concept cues: running prefix sum, previous-prefix counts, target difference, negative numbers, seeded zero prefix.</p>
+              <a href="https://leetcode.com/problems/subarray-sum-equals-k/" style="display:inline-block;background:#0f766e;color:#ffffff;text-decoration:none;border-radius:8px;padding:10px 14px;font-size:14px;font-weight:bold;">Open LeetCode problem</a>
+            </td></tr>
+          </table>
+
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:4px 0 18px;background:#fff7ed;border:2px solid #f59e0b;border-radius:12px;">
+            <tr><td style="padding:16px 18px;">
+              <div style="font-size:16px;font-weight:bold;color:#9a3412;">STOP - hints below</div>
+              <p style="margin:6px 0 0;font-size:14px;line-height:1.5;color:#7c2d12;">Read Hint 1 after one-third of the timer, Hint 2 after two-thirds, and Hint 3 only when time expires.</p>
+            </td></tr>
+          </table>
+
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 22px;border:1px solid #f0d9a8;border-radius:12px;">
+            <tr><td style="padding:16px 18px;">
+              <h3 style="margin:0 0 10px;font-size:16px;color:#102a56;">Hint ladder</h3>
+              <p style="margin:0 0 6px;font-size:14px;line-height:1.55;"><strong>Product of Array Except Self:</strong> separate product before and after each index; store left products first; multiply in right products on a reverse sweep.</p>
+              <p style="margin:0;font-size:14px;line-height:1.55;"><strong>Subarray Sum Equals K:</strong> find current prefix minus target among earlier prefixes; store counts, not just existence; add matches before recording the current prefix.</p>
+            </td></tr>
+          </table>
+
+          <h2 style="margin:0 0 10px;font-size:18px;color:#102a56;">Engineering - Deep Read</h2>
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 18px;border:1px solid #dfe6f1;border-radius:12px;">
+            <tr><td style="padding:16px 18px;">
+              <div style="margin:0 0 10px;">
+                <span style="display:inline-block;margin:0 6px 6px 0;padding:6px 9px;border-radius:999px;background:#e0f2fe;color:#075985;font-size:12px;">Read 55 min</span>
+                <span style="display:inline-block;margin:0 6px 6px 0;padding:6px 9px;border-radius:999px;background:#dcfce7;color:#166534;font-size:12px;">Synthesize 22 min</span>
+                <span style="display:inline-block;margin:0 6px 6px 0;padding:6px 9px;border-radius:999px;background:#fef3c7;color:#92400e;font-size:12px;">Recall 13 min</span>
+              </div>
+              <p style="margin:0 0 10px;font-size:14px;line-height:1.55;"><strong>Primary source:</strong> Google AIP-121 Resource-oriented design from the title through Stateless protocol, then AIP-130 Methods through Choosing a method category. Stop before AIP-130 Rationale.</p>
+              <p style="margin:0 0 10px;font-size:14px;line-height:1.55;"><strong>Companion:</strong> System Design Primer Back-of-the-envelope calculations, only the rules and examples needed for QPS, storage, bandwidth, and memory sizing.</p>
+              <p style="margin:0 0 12px;font-size:14px;line-height:1.55;"><strong>Pre-reading questions:</strong> What are the core resources and user journeys? Which operations are standard resource methods? Which three estimates would most change the architecture if they were 10x larger?</p>
+              <p style="margin:0 0 12px;font-size:14px;line-height:1.55;"><strong>Note-taking lens:</strong> Convert each paragraph into one artifact: requirement, API choice, estimate, or trade-off.</p>
+              <a href="https://google.aip.dev/121" style="display:inline-block;background:#102a56;color:#ffffff;text-decoration:none;border-radius:8px;padding:10px 14px;font-size:14px;font-weight:bold;margin:0 8px 8px 0;">Read AIP-121</a>
+              <a href="https://google.aip.dev/130" style="display:inline-block;background:#102a56;color:#ffffff;text-decoration:none;border-radius:8px;padding:10px 14px;font-size:14px;font-weight:bold;margin:0 8px 8px 0;">Read AIP-130</a>
+              <a href="https://github.com/donnemartin/system-design-primer#back-of-the-envelope-calculations" style="display:inline-block;background:#475569;color:#ffffff;text-decoration:none;border-radius:8px;padding:10px 14px;font-size:14px;font-weight:bold;margin:0 0 8px 0;">Read BOTE companion</a>
+            </td></tr>
+          </table>
+
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 18px;background:#f8fafc;border:1px solid #dfe6f1;border-radius:12px;">
+            <tr><td style="padding:16px 18px;">
+              <h2 style="margin:0 0 10px;font-size:18px;color:#102a56;">Knowledge check</h2>
+              <ol style="margin:0;padding-left:20px;font-size:14px;line-height:1.65;">
+                <li>What user journey would you clarify before naming any API endpoint?</li>
+                <li>When is a custom method better than forcing an operation into a standard method?</li>
+                <li>Which estimate drives database choice: write QPS, read QPS, storage growth, or hot-key skew?</li>
+                <li>Why should an API resource model avoid simply mirroring internal tables?</li>
+                <li>What changes if the same service moves from one user to a 10,000-user cohort?</li>
+              </ol>
+            </td></tr>
+          </table>
+
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#eef6ff;border:1px solid #cfe3ff;border-radius:12px;">
+            <tr><td style="padding:16px 18px;">
+              <h2 style="margin:0 0 10px;font-size:18px;color:#102a56;">Reply checklist</h2>
+              <ul style="margin:0;padding-left:20px;font-size:14px;line-height:1.65;">
+                <li>DSA outcomes: Solved, Hint, or Unsolved for both problems.</li>
+                <li>One mistake or speed bottleneck per problem.</li>
+                <li>Engineering self-score across requirements, API model, estimates, assumptions, and communication.</li>
+                <li>One repair item and next review date.</li>
+              </ul>
+            </td></tr>
+          </table>
+        </td></tr>
+        <tr><td style="padding:18px 28px;background:#eef3fa;color:#5e6b82;font-size:12px;line-height:1.5;">
+          Built from the swe-playbook &middot; Keep replies short: outcomes, mistakes, trade-offs, score, confidence.
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>
