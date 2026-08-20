@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>SDE2 Prep - Day 03</title>
+</head>
+<body style="margin:0;background:#f3f6fb;color:#172033;font-family:Arial,Helvetica,sans-serif;">
+  <div style="display:none;max-height:0;overflow:hidden;color:transparent;">Day 03: 3Sum, Container With Most Water, and an OOP/SOLID Deep Read.</div>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f3f6fb;">
+    <tr>
+      <td align="center" style="padding:24px 12px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:660px;background:#ffffff;border-radius:16px;overflow:hidden;border:1px solid #dfe6f1;">
+          <tr>
+            <td style="padding:28px;background:#102a56;color:#ffffff;">
+              <div style="font-size:12px;letter-spacing:1.4px;text-transform:uppercase;color:#a9c7ff;">SDE2 Interview Program - Day 03/90</div>
+              <h1 style="margin:8px 0 10px;font-size:27px;line-height:1.25;">OOP SOLID trade-offs</h1>
+              <div style="font-size:14px;color:#dbe8ff;">2026-08-20 - 06:00-08:30 IST</div>
+              <div style="margin-top:18px;">
+                <span style="display:inline-block;margin:0 6px 6px 0;padding:7px 10px;border-radius:999px;background:#21457c;font-size:12px;">150 min total</span>
+                <span style="display:inline-block;margin:0 6px 6px 0;padding:7px 10px;border-radius:999px;background:#21457c;font-size:12px;">DSA - 60 min</span>
+                <span style="display:inline-block;margin:0 6px 6px 0;padding:7px 10px;border-radius:999px;background:#f6b73c;color:#172033;font-size:12px;font-weight:bold;">Deep Read - 90 min</span>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:24px 28px;">
+              <div style="margin:0 0 18px;padding:16px;border:1px solid #dfe6f1;border-radius:12px;background:#f8fbff;">
+                <h2 style="margin:0 0 8px;font-size:18px;line-height:1.3;color:#102a56;">Today at a glance</h2>
+                <p style="margin:0;font-size:14px;line-height:1.6;color:#35445c;">Two medium two-pointer problems first, then a bounded reading session on object state, inheritance, delegation, and SOLID design pressure. No implementation is required today.</p>
+              </div>
+
+              <div style="margin:0 0 18px;">
+                <h2 style="margin:0 0 10px;font-size:18px;line-height:1.3;color:#102a56;">Agenda</h2>
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;border:1px solid #dfe6f1;font-size:13px;">
+                  <tr>
+                    <th align="left" style="padding:10px;background:#eef3fa;color:#102a56;border-bottom:1px solid #dfe6f1;">Time</th>
+                    <th align="left" style="padding:10px;background:#eef3fa;color:#102a56;border-bottom:1px solid #dfe6f1;">Activity</th>
+                    <th align="left" style="padding:10px;background:#eef3fa;color:#102a56;border-bottom:1px solid #dfe6f1;">Evidence</th>
+                  </tr>
+                  <tr>
+                    <td style="padding:10px;border-bottom:1px solid #edf1f7;white-space:nowrap;">06:00-06:30</td>
+                    <td style="padding:10px;border-bottom:1px solid #edf1f7;">3Sum</td>
+                    <td style="padding:10px;border-bottom:1px solid #edf1f7;">Duplicate policy and two-pointer invariant</td>
+                  </tr>
+                  <tr>
+                    <td style="padding:10px;border-bottom:1px solid #edf1f7;white-space:nowrap;">06:30-07:00</td>
+                    <td style="padding:10px;border-bottom:1px solid #edf1f7;">Container With Most Water</td>
+                    <td style="padding:10px;border-bottom:1px solid #edf1f7;">Area invariant and shorter-side proof</td>
+                  </tr>
+                  <tr>
+                    <td style="padding:10px;border-bottom:1px solid #edf1f7;white-space:nowrap;">07:00-07:52</td>
+                    <td style="padding:10px;border-bottom:1px solid #edf1f7;">Deep reading</td>
+                    <td style="padding:10px;border-bottom:1px solid #edf1f7;">State, inheritance, delegation, SOLID notes</td>
+                  </tr>
+                  <tr>
+                    <td style="padding:10px;border-bottom:1px solid #edf1f7;white-space:nowrap;">07:52-08:15</td>
+                    <td style="padding:10px;border-bottom:1px solid #edf1f7;">Closed-book synthesis</td>
+                    <td style="padding:10px;border-bottom:1px solid #edf1f7;">OOP decision guide</td>
+                  </tr>
+                  <tr>
+                    <td style="padding:10px;white-space:nowrap;">08:15-08:30</td>
+                    <td style="padding:10px;">Recall test</td>
+                    <td style="padding:10px;">Five answers, score, repair item</td>
+                  </tr>
+                </table>
+              </div>
+
+              <div style="margin:0 0 16px;padding:16px;border:1px solid #dfe6f1;border-radius:12px;background:#ffffff;">
+                <div style="font-size:12px;font-weight:bold;color:#6b7890;text-transform:uppercase;letter-spacing:.8px;">DSA - 30 min hard stop</div>
+                <h2 style="margin:6px 0 8px;font-size:19px;color:#102a56;">3Sum <span style="font-size:12px;color:#7a879b;font-weight:normal;">Medium</span></h2>
+                <p style="margin:0 0 12px;font-size:14px;line-height:1.6;color:#35445c;">Concept cues: sorting as structure, fixed anchor plus inward two pointers, duplicate skipping, triplet uniqueness, zero target transformation, O(n squared) target.</p>
+                <a href="https://leetcode.com/problems/3sum/" style="display:inline-block;padding:10px 14px;border-radius:8px;background:#1f6feb;color:#ffffff;text-decoration:none;font-size:13px;font-weight:bold;">Open 3Sum</a>
+              </div>
+
+              <div style="margin:0 0 18px;padding:16px;border:1px solid #dfe6f1;border-radius:12px;background:#ffffff;">
+                <div style="font-size:12px;font-weight:bold;color:#6b7890;text-transform:uppercase;letter-spacing:.8px;">DSA - 30 min hard stop</div>
+                <h2 style="margin:6px 0 8px;font-size:19px;color:#102a56;">Container With Most Water <span style="font-size:12px;color:#7a879b;font-weight:normal;">Medium</span></h2>
+                <p style="margin:0 0 12px;font-size:14px;line-height:1.6;color:#35445c;">Concept cues: opposite-end two pointers, width times limiting height, move the shorter boundary, shrinking width, dominated-candidate proof.</p>
+                <a href="https://leetcode.com/problems/container-with-most-water/" style="display:inline-block;padding:10px 14px;border-radius:8px;background:#1f6feb;color:#ffffff;text-decoration:none;font-size:13px;font-weight:bold;">Open Container With Most Water</a>
+              </div>
+
+              <div style="margin:22px 0 18px;padding:16px;border-radius:12px;background:#fff2d6;border:2px solid #f2b84b;text-align:center;">
+                <div style="font-size:18px;font-weight:bold;color:#6a4200;">STOP - hints below</div>
+                <p style="margin:8px 0 0;font-size:13px;line-height:1.5;color:#6a4200;">Read Hint 1 after one-third of the timer, Hint 2 after two-thirds, and Hint 3 only when time expires.</p>
+              </div>
+
+              <div style="margin:0 0 18px;padding:16px;border:1px solid #f2d395;border-radius:12px;background:#fffbf2;">
+                <h2 style="margin:0 0 10px;font-size:18px;color:#102a56;">Hint ladder</h2>
+                <h3 style="margin:10px 0 6px;font-size:15px;color:#172033;">3Sum</h3>
+                <ol style="margin:0 0 12px 20px;padding:0;font-size:14px;line-height:1.6;color:#35445c;">
+                  <li>After sorting, treat one value as fixed and ask which pair must complete zero.</li>
+                  <li>For each anchor, scan only the suffix after the anchor and skip duplicates at both levels.</li>
+                  <li>Sort, iterate anchors, use two pointers for complementary pairs, record unique triplets, and skip repeated values after a match.</li>
+                </ol>
+                <h3 style="margin:10px 0 6px;font-size:15px;color:#172033;">Container With Most Water</h3>
+                <ol style="margin:0 0 0 20px;padding:0;font-size:14px;line-height:1.6;color:#35445c;">
+                  <li>The current area is limited by the shorter chosen line.</li>
+                  <li>Since width only decreases, keeping the shorter line cannot produce a better area with any inner partner.</li>
+                  <li>Start at both ends, update best area, then move the pointer at the shorter line inward until the pointers meet.</li>
+                </ol>
+              </div>
+
+              <div style="margin:0 0 18px;padding:16px;border:1px solid #dfe6f1;border-radius:12px;background:#ffffff;">
+                <div style="font-size:12px;font-weight:bold;color:#6b7890;text-transform:uppercase;letter-spacing:.8px;">Engineering - Deep Read</div>
+                <h2 style="margin:6px 0 8px;font-size:19px;color:#102a56;">OOP, SOLID, composition vs inheritance</h2>
+                <p style="margin:0 0 10px;font-size:14px;line-height:1.6;color:#35445c;"><strong>Read 52 min:</strong> Python Classes sections 9.3.5 through 9.7, then the Python FAQ delegation section. Companion: the five SOLID principle summaries.</p>
+                <p style="margin:0 0 10px;font-size:14px;line-height:1.6;color:#35445c;"><strong>Synthesize 23 min:</strong> write a compact OOP decision guide covering object responsibilities, invariants, class-vs-instance state, inheritance, composition, delegation, and SOLID pressure.</p>
+                <p style="margin:0 0 12px;font-size:14px;line-height:1.6;color:#35445c;"><strong>Recall 15 min:</strong> answer the knowledge-check questions and score the five checkpoints.</p>
+                <p style="margin:0 0 10px;font-size:14px;line-height:1.6;color:#35445c;"><strong>Pre-reading questions:</strong> What state belongs on each instance? When is inheritance truly substitutable? Which SOLID principle catches special-case method growth?</p>
+                <p style="margin:0 0 12px;font-size:14px;line-height:1.6;color:#35445c;"><strong>Note-taking lens:</strong> classify each idea as state ownership, behavior dispatch, extension mechanism, or boundary contract.</p>
+                <a href="https://docs.python.org/3/tutorial/classes.html" style="display:inline-block;margin:0 8px 8px 0;padding:10px 14px;border-radius:8px;background:#102a56;color:#ffffff;text-decoration:none;font-size:13px;font-weight:bold;">Open Python Classes</a>
+                <a href="https://docs.python.org/3/faq/programming.html#what-is-delegation" style="display:inline-block;margin:0 8px 8px 0;padding:10px 14px;border-radius:8px;background:#102a56;color:#ffffff;text-decoration:none;font-size:13px;font-weight:bold;">Open Delegation FAQ</a>
+                <a href="https://principles.design/examples/solid-design-principles" style="display:inline-block;margin:0 0 8px 0;padding:10px 14px;border-radius:8px;background:#102a56;color:#ffffff;text-decoration:none;font-size:13px;font-weight:bold;">Open SOLID Summary</a>
+              </div>
+
+              <div style="margin:0 0 18px;padding:16px;border:1px solid #dfe6f1;border-radius:12px;background:#f8fbff;">
+                <h2 style="margin:0 0 10px;font-size:18px;color:#102a56;">Knowledge check</h2>
+                <ol style="margin:0 0 0 20px;padding:0;font-size:14px;line-height:1.6;color:#35445c;">
+                  <li>Why is mutable class-level state dangerous when each object should own independent state?</li>
+                  <li>What must be true before a subclass is safe to use wherever the base class is expected?</li>
+                  <li>How does delegation change only one behavior while preserving most behavior from a wrapped object?</li>
+                  <li>Which SOLID principle argues against a large interface with methods most clients do not use?</li>
+                  <li>When would composition add unnecessary indirection compared with simple inheritance or a plain function?</li>
+                </ol>
+              </div>
+
+              <div style="margin:0;padding:16px;border:1px solid #dfe6f1;border-radius:12px;background:#ffffff;">
+                <h2 style="margin:0 0 10px;font-size:18px;color:#102a56;">Reply checklist</h2>
+                <ul style="margin:0 0 0 18px;padding:0;font-size:14px;line-height:1.7;color:#35445c;">
+                  <li>3Sum: Solved, Hint, or Unsolved plus time used.</li>
+                  <li>Container: Solved, Hint, or Unsolved plus time used.</li>
+                  <li>One OOP mental model and one SOLID repair item.</li>
+                  <li>Five checkpoint scores and confidence from 1 to 5.</li>
+                  <li>Any weak pattern to schedule for review.</li>
+                </ul>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:18px 28px;background:#eef3fa;color:#5e6b82;font-size:12px;line-height:1.5;">
+              Built from the swe-playbook - Keep replies short: outcomes, mistakes, trade-offs, score, confidence.
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

@@ -19,6 +19,7 @@ Add one row after each session. Use `Solved`, `Hint`, or `Unsolved` for coding o
 |---|---|---|---|---:|---|---|
 | 1 / 2026-08-18 | — | — | — | — | — | — |
 | 2 / 2026-08-19 | — | — | — | — | — | — |
+| 3 / 2026-08-20 | — | — | — | — | — | — |
 
 ## Mistake bank
 
