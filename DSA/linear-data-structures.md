@@ -542,7 +542,7 @@ def longest_consecutive(nums):             # only start counting at run heads
 - [Continuous Subarray Sum](https://leetcode.com/problems/continuous-subarray-sum/) — prefix-sum mod k
 - [Copy List with Random Pointer](https://leetcode.com/problems/copy-list-with-random-pointer/) — `old → new` node map
 - [Encode and Decode TinyURL](https://leetcode.com/problems/encode-and-decode-tinyurl/) — id ↔ url map
-- [LRU Cache](https://leetcode.com/problems/lru-cache/) — hashmap + doubly linked list (see [SystemDesign/problems.md](../SystemDesign/problems.md#lru-cache))
+- [LRU Cache](https://leetcode.com/problems/lru-cache/) — hashmap + doubly linked list (see [LLD guide: LRU cache](../SystemDesign/lld-interview-guide.md#102-lru-cache-and-lfu-cache-with-ttl))
 - [LFU Cache](https://leetcode.com/problems/lfu-cache/) — hashmap + hashmap-of-DLLs + `min_freq`
 
 ---

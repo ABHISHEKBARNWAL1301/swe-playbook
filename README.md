@@ -17,12 +17,11 @@ Also: [python.md](DSA/python.md) — Python reference: containers, hash-table in
 
 ### [SystemDesign/](SystemDesign/) — System Design
 
-- [problems.md](SystemDesign/problems.md) — how to approach a design problem, plus data-structure design patterns (LRU/LFU cache, RandomizedSet, MinStack, Trie design, Twitter-style feed, iterators, streams)
-- [dbms.md](SystemDesign/dbms.md) — relational vs. document databases, indexing, full-text search (inverted index, BM25), graph databases, RDF
-- [computer_networks.md](SystemDesign/computer_networks.md) — networking foundations: client-server, IP, DNS, proxies, and more
-- [oops.md](SystemDesign/oops.md) — OOP design principles (SOLID) *(early draft)*
-- [genai.md](SystemDesign/genai.md) — GenAI/LLM system notes (LangChain, RAG) *(early draft, unstructured)*
-- `devops.md`, `os.md` — reserved, not yet written
+- [hld-interview-guide.md](SystemDesign/hld-interview-guide.md) — **High-level design**: interview framework, estimation, networking (OSI/TCP-IP, TLS, DNS), API design, load balancing, CDN, caching, SQL internals, NoSQL modeling, replication, sharding, distributed systems, messaging, search, reliability, security, observability, plus 26 design problems with full solutions
+- [lld-interview-guide.md](SystemDesign/lld-interview-guide.md) — **Low-level design / machine coding**: OOP, UML, SOLID, design patterns with code, plus 25 problems with runnable solutions (parking lot, LRU/LFU, BookMyShow, Splitwise, elevator, rate limiter, …)
+- [concurrency-interview-guide.md](SystemDesign/concurrency-interview-guide.md) — **Concurrency**: threads, GIL, locks, conditions, deadlock, asyncio, multiprocessing, cross-server coordination, the LeetCode concurrency set, and 12 thread-safe design problems
+- [genai.md](SystemDesign/genai.md) — **GenAI engineering**: LLM fundamentals, prompting, tool calling, agents, MCP, RAG, evaluation, serving, cost, safety, and GenAI system design problems
+- [devops.md](SystemDesign/devops.md) — reverse proxies, Docker, and related DevOps notes
 
 ## Usage
 
