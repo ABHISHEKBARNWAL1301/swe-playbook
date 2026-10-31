@@ -337,14 +337,14 @@ class DoublyLinkedList:
         node.next.prev = node.prev
 ```
 
-**Where it's used:** the O(1) "move a node to the front / evict from the back" combo is exactly what an [LRU cache](../SystemDesign/lld-interview-guide.md#102-lru-cache-and-lfu-cache-with-ttl) (hashmap + DLL) needs. Deques, browser history, and Python's own `collections.OrderedDict` are built on the same idea.
+**Where it's used:** the O(1) "move a node to the front / evict from the back" combo is exactly what an [LRU cache](../SystemDesign/lld-interview-guide.md#30-problem-lru-cache-and-lfu-cache-with-ttl) (hashmap + DLL) needs. Deques, browser history, and Python's own `collections.OrderedDict` are built on the same idea.
 
 #### Questions
 
 - [Design Linked List](https://leetcode.com/problems/design-linked-list/)
 - [Flatten a Multilevel Doubly Linked List](https://leetcode.com/problems/flatten-a-multilevel-doubly-linked-list/)
 - [Design Browser History](https://leetcode.com/problems/design-browser-history/)
-- [LRU Cache](https://leetcode.com/problems/lru-cache/) (hashmap + DLL — full design in [LLD guide: LRU cache](../SystemDesign/lld-interview-guide.md#102-lru-cache-and-lfu-cache-with-ttl))
+- [LRU Cache](https://leetcode.com/problems/lru-cache/) (hashmap + DLL — full design in [LLD guide: LRU cache](../SystemDesign/lld-interview-guide.md#30-problem-lru-cache-and-lfu-cache-with-ttl))
 - [Convert Binary Search Tree to Sorted Doubly Linked List](https://leetcode.com/problems/convert-binary-search-tree-to-sorted-doubly-linked-list/)
 - [All O`one Data Structure](https://leetcode.com/problems/all-oone-data-structure/) (DLL of frequency buckets)
 - [Design Circular Deque](https://leetcode.com/problems/design-circular-deque/)
