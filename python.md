@@ -1,14 +1,44 @@
-# Python
+# Python Interview Reference
 
 Built-in containers, standard-library tools, and language internals you're expected to know cold in interviews. Each container section: what it maps to, the operations that matter, complexity, and the gotchas that bite. The last section covers language-level questions (GIL, generators, decorators, ...) asked outside of DSA problems.
 
-## Covered
+Related: [DSA guide](dsa-interview-guide.md) (patterns, algorithms, advanced topics) · [LLD guide](../SystemDesign/lld-interview-guide.md) (OOP, concurrency, the GIL in depth)
 
-`list` · `tuple` · `str` · `dict` · `set` · `deque` · `stack/queue` · `Counter` · `defaultdict` · `heapq` · `slicing` · `comprehensions` · `iterables toolkit` · `lambda` · `functools cache` · `generators` · `decorators` · `GIL`
+## Contents
+
+- [1. List](#1-list)
+- [2. Slicing](#2-slicing)
+- [3. Tuple](#3-tuple)
+- [4. String](#4-string)
+- [5. Dictionary](#5-dictionary)
+  - [5.1 defaultdict — auto-initializes missing keys](#51-defaultdict--auto-initializes-missing-keys)
+  - [5.2 Why get/set is O(1)](#52-why-getset-is-o1)
+- [6. Set](#6-set)
+- [7. Deque](#7-deque)
+- [8. Stack & Queue](#8-stack--queue)
+- [9. Counter](#9-counter)
+- [10. Heap (priority queue)](#10-heap-priority-queue)
+- [11. Iterables toolkit](#11-iterables-toolkit)
+  - [11.1 map / filter — transform & keep](#111-map--filter--transform--keep)
+  - [11.2 all / any — short-circuit boolean over an iterable](#112-all--any--short-circuit-boolean-over-an-iterable)
+- [12. Comprehensions](#12-comprehensions)
+- [13. Lambda](#13-lambda)
+  - [13.1 The main use: `key=`](#131-the-main-use-key)
+  - [13.2 Also seen with map / filter](#132-also-seen-with-map--filter)
+- [14. Memoization — `functools.cache` / `lru_cache`](#14-memoization--functoolscache--lru_cache)
+- [15. Python Interview — Language Internals & Gotchas](#15-python-interview--language-internals--gotchas)
+  - [15.1 `is` vs `==`](#151-is-vs-)
+  - [15.2 Iterators vs iterables](#152-iterators-vs-iterables)
+  - [15.3 Generators — `yield`](#153-generators--yield)
+  - [15.4 `*args` / `**kwargs`](#154-args--kwargs)
+  - [15.5 Decorators](#155-decorators)
+  - [15.6 The GIL (Global Interpreter Lock)](#156-the-gil-global-interpreter-lock)
+- [16. Gotchas worth memorizing](#16-gotchas-worth-memorizing)
+  - [16.1 Pass by value or reference?](#161-pass-by-value-or-reference)
 
 ---
 
-# 1. List
+## 1. List
 
 Dynamic array (`std::vector`). Contiguous, indexable, mutable.
 
@@ -46,7 +76,7 @@ b = sorted(nums)                  # returns new list, leaves nums alone
 
 ---
 
-# 2. Slicing
+## 2. Slicing
 
 `a[start:stop:step]` — `stop` exclusive. Always returns a **new** list (copy).
 
@@ -65,7 +95,7 @@ Out-of-range slices are safe (clamped); out-of-range **index** raises `IndexErro
 
 ---
 
-# 3. Tuple
+## 3. Tuple
 
 Immutable list. Hashable (if its elements are) → usable as `dict` keys and `set` members.
 
@@ -80,7 +110,7 @@ Use for fixed records, multiple return values, and composite keys: `seen.add((r,
 
 ---
 
-# 4. String
+## 4. String
 
 Immutable sequence of chars. Every "mutation" builds a new string.
 
@@ -112,7 +142,7 @@ chr(97)                  # 'a'
 
 ---
 
-# 5. Dictionary
+## 5. Dictionary
 
 Hash map (`unordered_map`). O(1) average ops. Insertion-ordered since 3.7.
 
@@ -138,7 +168,7 @@ d[k] = d.get(k, 0) + 1       # frequency count (or use Counter)
 
 > **GOTCHA — `d[k]` on a missing key raises `KeyError`.** Use `.get(k, default)`, `defaultdict`, or `in` first.
 
-## defaultdict — auto-initializes missing keys
+### 5.1 defaultdict — auto-initializes missing keys
 
 ```python
 from collections import defaultdict
@@ -149,7 +179,7 @@ adj   = defaultdict(list)    # graph: adj[u].append(v)
 
 Accessing a missing key **creates** it. To avoid silently growing the dict, read with `.get` instead of `[]`.
 
-## Why get/set is O(1)
+### 5.2 Why get/set is O(1)
 
 A dict is backed by a **hash table**: a flat array of slots. To store `d[k] = v`:
 
@@ -161,7 +191,7 @@ A dict is backed by a **hash table**: a flat array of slots. To store `d[k] = v`
 
 Lookup repeats the same arithmetic to jump straight to slot `i` — no scan. That's the O(1): a hash + a mod + one array access, independent of how many keys exist.
 
-### Wait — doesn't "jumping to slot `i`" itself take time?
+#### Wait — doesn't "jumping to slot `i`" itself take time?
 
 No, and this is the load-bearing fact behind every hash-table claim. An array is a **contiguous block of memory** of fixed-size slots. The address of slot `i` is computed directly:
 
@@ -184,7 +214,7 @@ Contrast with a **linked list**: nodes are scattered in memory, so reaching node
 
 The catch: two different keys can land on the same slot (`h1 % cap == h2 % cap`). That's a **collision**, and how you resolve it defines the table.
 
-### Chaining
+#### Chaining
 
 Each slot holds a **bucket** (a small list/linked list) of all entries that hashed there. Insert appends to the bucket; lookup hashes to the slot, then scans that one short bucket comparing keys.
 
@@ -195,7 +225,7 @@ slot 2 →
 slot 3 → (k2,v2)
 ```
 
-### Open addressing (what CPython uses)
+#### Open addressing (what CPython uses)
 
 No buckets — every entry lives **inline** in the slot array. On collision, **probe** for the next free slot by a fixed rule (linear: `i+1, i+2…`; CPython uses a pseudo-random sequence derived from the full hash). Lookup probes the same sequence until it finds the key or an empty slot.
 
@@ -203,7 +233,7 @@ No buckets — every entry lives **inline** in the slot array. On collision, **p
 insert k4 → slot 1 taken → probe → slot 2 free → place k4 there
 ```
 
-### Why it stays O(1) on average
+#### Why it stays O(1) on average
 
 Both schemes degrade to **O(n)** if everything collides into one chain/cluster. They stay O(1) by keeping the **load factor** (entries ÷ capacity) low — CPython resizes (≈ doubles, rehashing all keys) once the table is ~2/3 full, so buckets/probe-runs stay short.
 
@@ -216,7 +246,7 @@ Both schemes degrade to **O(n)** if everything collides into one chain/cluster. 
 
 ---
 
-# 6. Set
+## 6. Set
 
 Hash set (`unordered_set`). O(1) membership. Elements must be hashable (no lists/dicts; tuples OK).
 
@@ -240,11 +270,11 @@ a <= b   # subset
 frozenset(x)   # immutable, hashable set — usable as dict key
 ```
 
-A `set` is a `dict` with keys but no values — same hash table, same open-addressing collision handling (see [Why get/set is O(1)](#why-getset-is-o1) above). So `x in s` is the O(1) slot lookup, and membership in a list (`x in lst`, O(n)) is the trap it replaces.
+A `set` is a `dict` with keys but no values — same hash table, same open-addressing collision handling (see [Why get/set is O(1)](#52-why-getset-is-o1) above). So `x in s` is the O(1) slot lookup, and membership in a list (`x in lst`, O(n)) is the trap it replaces.
 
 ---
 
-# 7. Deque
+## 7. Deque
 
 Double-ended queue (`collections.deque`). O(1) push/pop at **both** ends — the list's `pop(0)`/`insert(0, x)` are O(n), so use deque for queues.
 
@@ -266,7 +296,7 @@ Used in: **BFS**, **sliding-window maximum** (monotonic queue), bounded history 
 
 ---
 
-# 8. Stack & Queue
+## 8. Stack & Queue
 
 **Stack (LIFO)** — just a list:
 
@@ -288,7 +318,7 @@ q.popleft()       # dequeue   — both O(1)
 
 ---
 
-# 9. Counter
+## 9. Counter
 
 Frequency map built on `dict`. Missing keys read as `0` (no `KeyError`).
 
@@ -316,7 +346,7 @@ Anagram check in one line: `Counter(s) == Counter(t)`.
 
 ---
 
-# 10. Heap (priority queue)
+## 10. Heap (priority queue)
 
 `heapq` — a **min-heap** over a plain list. `heap[0]` is the smallest.
 
@@ -346,7 +376,7 @@ heapq.heappush(h, (priority, item))          # order by tuple
 
 ---
 
-# 11. Iterables toolkit
+## 11. Iterables toolkit
 
 Work on any iterable — used constantly:
 
@@ -370,7 +400,7 @@ a, b = zip(*pairs)                       # unzip
 
 > `min`/`max` raise on empty input — pass `default=`: `max(nums, default=0)`.
 
-### map / filter — transform & keep
+### 11.1 map / filter — transform & keep
 
 Both return **lazy iterators** — wrap in `list()` to materialize. In practice a comprehension is more readable; reach for these when piping into another consumer.
 
@@ -380,7 +410,7 @@ evens = filter(lambda x: x % 2 == 0, nums)
 nonempty = filter(None, items)           # filter(None, ...) drops falsy values
 ```
 
-### all / any — short-circuit boolean over an iterable
+### 11.2 all / any — short-circuit boolean over an iterable
 
 `all` → True if every element is truthy (vacuously True on empty). `any` → True if at least one is. Both **stop early** at the first decisive element.
 
@@ -395,7 +425,7 @@ if any(word in s for word in banned): ...
 
 ---
 
-# 12. Comprehensions
+## 12. Comprehensions
 
 Faster and clearer than manual loops; the Pythonic default.
 
@@ -410,7 +440,7 @@ Faster and clearer than manual loops; the Pythonic default.
 
 ---
 
-# 13. Lambda
+## 13. Lambda
 
 A `lambda` is an **anonymous function** of one expression — no `def`, no name, no `return` (the expression's value is returned). These two are equivalent:
 
@@ -421,7 +451,7 @@ def f(x): return x * 2       # same thing
 
 Syntax: `lambda <args>: <single expression>`. It can take any args (`lambda x, y: x + y`, `lambda: 0`) but the body must be **one expression** — no statements, loops, or assignments.
 
-## The main use: `key=`
+### 13.1 The main use: `key=`
 
 A `key` function maps each element to the value you want to **sort/compare by**. `lambda` lets you write that inline instead of defining a throwaway named function.
 
@@ -441,7 +471,7 @@ sorted(people, key=lambda x: (x.age, x.name))# age asc, then name A→Z
 
 Same `key=` works in `sorted`, `list.sort`, `min`, `max`, `heapq.nlargest/nsmallest`.
 
-## Also seen with map / filter
+### 13.2 Also seen with map / filter
 
 ```python
 list(map(lambda x: x*x, nums))               # but a comprehension is clearer: [x*x for x in nums]
@@ -452,7 +482,7 @@ list(filter(lambda x: x % 2 == 0, nums))
 
 ---
 
-# 14. Memoization — `functools.cache` / `lru_cache`
+## 14. Memoization — `functools.cache` / `lru_cache`
 
 Wrap a pure function so repeated calls with the same args return a cached result instead of recomputing. This is the one-line way to turn an exponential recursion into a polynomial one (top-down DP).
 
@@ -492,11 +522,11 @@ def solve(grid):
 
 ---
 
-# 15. Python Interview — Language Internals & Gotchas
+## 15. Python Interview — Language Internals & Gotchas
 
 Questions interviewers probe beyond DSA problems — how the language itself works.
 
-### `is` vs `==`
+### 15.1 `is` vs `==`
 
 `==` compares **values** (calls `__eq__`); `is` compares **identity** (same object in memory).
 
@@ -516,7 +546,7 @@ x is y        # False (usually) — never rely on this
 
 > Use `is` only for `None` / `True` / `False` singleton checks (`if x is None`). Use `==` for everything else.
 
-### Iterators vs iterables
+### 15.2 Iterators vs iterables
 
 An **iterable** has `__iter__` (can hand out an iterator: `list`, `dict`, `str`, ...). An **iterator** has `__next__` (produces values one at a time, remembers position, raises `StopIteration` when done). Every iterator is an iterable; not every iterable is an iterator.
 
@@ -527,7 +557,7 @@ next(it)                 # 2
 for x in [1, 2, 3]: ...  # `for` calls iter() then next() under the hood
 ```
 
-### Generators — `yield`
+### 15.3 Generators — `yield`
 
 A function with `yield` returns a **generator** (an iterator) instead of running to completion. Each `next()` call resumes right after the last `yield` — state is preserved between calls without storing the whole sequence.
 
@@ -545,7 +575,7 @@ for x in count_up_to(3): print(x)   # 1 2 3, one at a time
 - A **generator expression** `(x*x for x in nums)` is the lazy counterpart of a list comprehension — same syntax minus the brackets, one value at a time instead of the whole list built up front. Reach for it when you'll iterate once and don't need a list (e.g. piping straight into `sum`/`any`/`all` — see [Iterables toolkit](#11-iterables-toolkit)).
 - Once exhausted, a generator can't be restarted — call the function again for a fresh one.
 
-### `*args` / `**kwargs`
+### 15.4 `*args` / `**kwargs`
 
 Collect a variable number of positional / keyword arguments into a `tuple` / `dict`.
 
@@ -566,7 +596,7 @@ d = {'a': 1, 'b': 2}
 f(**d)                 # unpacks: f(a=1, b=2)
 ```
 
-### Decorators
+### 15.5 Decorators
 
 A decorator wraps a function to add behavior without changing its code. `@dec` above `def f` is sugar for `f = dec(f)`.
 
@@ -586,7 +616,7 @@ def slow(): ...
 
 `@cache` / `@lru_cache` (section 14 above) are the decorators you'll actually reach for in interviews.
 
-### The GIL (Global Interpreter Lock)
+### 15.6 The GIL (Global Interpreter Lock)
 
 CPython's GIL lets only **one thread execute Python bytecode at a time**, even on a multi-core machine.
 
@@ -599,7 +629,7 @@ CPython's GIL lets only **one thread execute Python bytecode at a time**, even o
 
 ---
 
-# Gotchas worth memorizing
+## 16. Gotchas worth memorizing
 
 ```python
 # Integer vs float division
@@ -624,7 +654,7 @@ a, b = b, a
 best = float('inf'); worst = float('-inf')
 ```
 
-## Pass by value or reference?
+### 16.1 Pass by value or reference?
 
 Neither, exactly — Python passes **the reference, by value** (often called *call by object reference* or *call by sharing*). Every variable is a **name** pointing at an object; assignment binds a name to an object, it never copies the object. When you call `f(x)`, the parameter becomes a *second name* for the very same object `x` points to.
 
@@ -667,4 +697,3 @@ After `lst = [0, 0]`, the parameter name points at a brand-new list; the caller'
 > ```
 
 > **GOTCHA — copy semantics.** `b = a` aliases; `b = a[:]` / `a.copy()` is a **shallow** copy (nested objects still shared). For nested structures use `copy.deepcopy(a)`.
-

@@ -6,14 +6,8 @@ Study notes and curriculum material covering Python, data structures & algorithm
 
 ### [DSA/](DSA/) — Data Structures & Algorithms
 
-Concepts, patterns, and curated practice problems. Each file follows: concept intro → patterns → code variants (recursion → memo → tabulation → space-optimized) → practice problems.
-
-1. [linear-data-structures.md](DSA/linear-data-structures.md) — **Linear Data Structures**: *Arrays* (prefix sums, two pointers, sliding window, Kadane's, 2D matrix) · *Strings* (frequency counting, rolling hash, canonical keys) · *Hashing* (seen-before maps, dedup sets) · *Stacks* (brackets, expression eval, MinStack, monotonic stack) · *Queues* (BFS, circular queue, monotonic deque)
-2. [non-linear-data-structures.md](DSA/non-linear-data-structures.md) — **Non-Linear Data Structures**: *Heaps* (Top-K, k-way merge, two-heap median) · *Graphs* (BFS/DFS, topological sort, DSU, shortest paths, MST, SCC) · *Linked Lists* (fast/slow, reverse, merge, doubly linked list) · *Trees & BST* (traversals, LCA, construct/serialize, tree DP) · *Trie* (CRUD, prefix lookup)
-3. [algorithms.md](DSA/algorithms.md) — **Algorithms**: *Binary Search* (bounds, search-on-answer, rotated array) · *Sorting* (built-in, counting sort, merge/quick sort, quickselect) · *Dynamic Programming* (linear, LIS, knapsack, string, state-machine, interval, game theory, grid, tree DP) · *Greedy* (intervals, sweep line, jump game, greedy + heap) · *Recursion & Backtracking* (backtracking templates, N-Queens)
-4. [scalable-data-structures.md](DSA/scalable-data-structures.md) — **Scalable Data Structures**: Bloom filters, GeoHash, Merkle trees — approximate/space-efficient structures used at scale
-
-Also: [python.md](DSA/python.md) — Python reference: containers, hash-table internals, `functools.cache`, and a language-internals interview section (GIL, generators, decorators, gotchas).
+- [dsa-interview-guide.md](DSA/dsa-interview-guide.md) — **DSA book**: how to approach a problem, complexity analysis and reading constraints, recursion and backtracking, *arrays* (prefix sums, two pointers, sliding window, Kadane's, 2D matrix), *strings*, *hashing*, *sorting*, *binary search*, *stacks and queues* (monotonic stack/deque), *linked lists*, *trees and BSTs*, *tries*, *heaps*, *graphs* (BFS/DFS, topological sort, union-find, shortest paths, MST, SCC), *greedy*, *dynamic programming* (linear, LIS, knapsack, string, state machine, interval, game, grid, tree, bitmask), space-efficient structures (Bloom filters, GeoHash, Merkle trees), and **advanced topics**: bit manipulation, math and number theory, KMP/Z/Manacher, Fenwick and segment trees, sparse tables, 0-1 BFS, A*, Euler paths, binary lifting, max flow, digit DP, meet in the middle, ordered sets and skip lists, randomized and streaming algorithms — ending with a pattern-recognition cheat sheet
+- [python.md](DSA/python.md) — **Python interview reference**: containers and their complexity, hash-table internals, `functools.cache`, and language internals (GIL, generators, decorators, gotchas)
 
 ### [SystemDesign/](SystemDesign/) — System Design
 
