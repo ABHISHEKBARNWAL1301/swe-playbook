@@ -17,10 +17,8 @@ Also: [python.md](DSA/python.md) — Python reference: containers, hash-table in
 
 ### [SystemDesign/](SystemDesign/) — System Design
 
-- [hld-interview-guide.md](SystemDesign/hld-interview-guide.md) — **High-level design**: interview framework, estimation, networking (OSI/TCP-IP, TLS, DNS), API design, load balancing, CDN, caching, SQL internals, NoSQL modeling, replication, sharding, distributed systems, messaging, search, reliability, security, observability, plus 26 design problems with full solutions
-- [lld-interview-guide.md](SystemDesign/lld-interview-guide.md) — **Low-level design / machine coding**: OOP, UML, SOLID, design patterns with code, plus 25 problems with runnable solutions (parking lot, LRU/LFU, BookMyShow, Splitwise, elevator, rate limiter, …)
-- [concurrency-interview-guide.md](SystemDesign/concurrency-interview-guide.md) — **Concurrency**: threads, GIL, locks, conditions, deadlock, asyncio, multiprocessing, cross-server coordination, the LeetCode concurrency set, and 12 thread-safe design problems
-- [genai.md](SystemDesign/genai.md) — **GenAI engineering**: LLM fundamentals, prompting, tool calling, agents, MCP, RAG, evaluation, serving, cost, safety, and GenAI system design problems
+- [hld-interview-guide.md](SystemDesign/hld-interview-guide.md) — **High-level design**: interview framework, estimation, networking (OSI/TCP-IP, TLS, DNS), API design, load balancing, CDN, caching, SQL internals, NoSQL modeling, replication, sharding, distributed systems (incl. cross-server concurrency), messaging, search, reliability, security, observability, 26 design problems with full solutions, and **GenAI engineering** (LLM fundamentals, prompting, tool calling, agents, MCP, RAG, evaluation, serving, cost, safety, GenAI system design)
+- [lld-interview-guide.md](SystemDesign/lld-interview-guide.md) — **Low-level design / machine coding**: OOP, UML, SOLID, design patterns with code, 25 problems with runnable solutions (parking lot, LRU/LFU, BookMyShow, Splitwise, elevator, rate limiter, …), and **concurrency** (threads, GIL, locks, deadlock, asyncio, multiprocessing, the LeetCode concurrency set, 12 thread-safe design problems)
 - [devops.md](SystemDesign/devops.md) — reverse proxies, Docker, and related DevOps notes
 
 ## Usage
