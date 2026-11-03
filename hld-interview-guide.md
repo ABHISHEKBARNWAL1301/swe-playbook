@@ -7757,73 +7757,6 @@ Apply **step, time, and cost limits**; stop when repeated actions make no progre
 
 **Roles:** user, assistant, tool results. System instructions are separate configuration. The chat UI shows user messages and final answers; internal tool exchanges are stored but usually hidden. Each model call = system prompt + summary of older turns + recent messages + current task state.
 
-Runnable version with a **fake model** (so you can see the mechanics without an API):
-
-```python
-import json
-from dataclasses import dataclass, field
-
-@dataclass
-class ToolCall:
-    id: str
-    name: str
-    args: dict
-
-@dataclass
-class ModelReply:
-    text: str = ""
-    tool_calls: list[ToolCall] = field(default_factory=list)
-
-class FakeModel:
-    """Stands in for an LLM: first asks for the order, then answers using the tool result."""
-    def __call__(self, messages, tools) -> ModelReply:
-        last = messages[-1]
-        if last["role"] == "user" and isinstance(last["content"], str):
-            return ModelReply(tool_calls=[ToolCall("call_1", "get_order", {"order_id": 1042})])
-        result = json.loads(last["content"][0]["content"])
-        return ModelReply(text=f"Your order {result['order_id']} is {result['status']}.")
-
-def get_order(order_id: int) -> dict:
-    if order_id != 1042:
-        raise KeyError(f"order {order_id} not found")
-    return {"order_id": order_id, "status": "SHIPPED"}
-
-TOOLS = {"get_order": get_order}
-
-def run_agent(model, user_msg: str, max_steps: int = 5) -> tuple[str, list]:
-    messages, trace = [{"role": "user", "content": user_msg}], []
-    for step in range(max_steps):
-        reply = model(messages, list(TOOLS))
-        trace.append(("model", step, [c.name for c in reply.tool_calls]))
-        if not reply.tool_calls:
-            return reply.text, trace
-        messages.append({"role": "assistant", "content": reply})
-        results = []
-        for call in reply.tool_calls:
-            fn = TOOLS.get(call.name)
-            try:
-                if fn is None:
-                    raise ValueError(f"unknown tool {call.name}")
-                out, err = json.dumps(fn(**call.args)), False
-            except Exception as exc:                      # errors go back to the model
-                out, err = f"Error: {exc}", True
-            results.append({"tool_call_id": call.id, "content": out, "is_error": err})
-            trace.append(("tool", call.name, err))
-        messages.append({"role": "tool", "content": results})
-    return "Stopped: step limit reached.", trace
-
-answer, trace = run_agent(FakeModel(), "Where is order 1042?")
-assert answer == "Your order 1042 is SHIPPED."
-assert trace == [("model", 0, ["get_order"]), ("tool", "get_order", False), ("model", 1, [])]
-
-class LoopingModel:
-    def __call__(self, messages, tools):
-        return ModelReply(tool_calls=[ToolCall("x", "get_order", {"order_id": 1})])
-
-answer, trace = run_agent(LoopingModel(), "loop forever", max_steps=3)
-assert answer.startswith("Stopped") and trace[1] == ("tool", "get_order", True)
-```
-
 ### 57.4 Reliability features (what interviewers probe)
 
 - **Limits:** max steps, max tokens/cost per run (task budget), wall-clock timeout, per-tool timeout.
@@ -7873,13 +7806,20 @@ system instructions
 When the budget is exceeded, summarize the oldest completed turns — but never cut the middle of a tool call and its result. Keep the originals, so the bot can look up the exact earlier message if a summary is too vague.
 
 ```python
-def assemble_context(system: str, memories: list[str], summary: str, history: list[dict],
-                     task_state: str, budget: int, count=lambda s: len(s) // 4) -> list[dict]:
+def assemble_context(
+    system: str,
+    memories: list[str],
+    summary: str,
+    history: list[dict],
+    task_state: str,
+    budget: int,
+    count=lambda s: len(s) // 4,
+) -> list[dict]:
     """Keep fixed parts, then as many recent messages as fit; older ones are covered by the summary."""
     fixed = [system, "\n".join(memories), summary, task_state]
     used = sum(count(p) for p in fixed)
     kept = []
-    for msg in reversed(history):                  # newest first
+    for msg in reversed(history):  # newest first
         cost = count(msg["content"])
         if used + cost > budget:
             break
@@ -7889,11 +7829,20 @@ def assemble_context(system: str, memories: list[str], summary: str, history: li
     header = f"{system}\n<memory>{'; '.join(memories)}</memory>\n<summary>{summary}</summary>\n<task>{task_state}</task>"
     return [{"role": "system", "content": header}] + kept
 
-history = [{"role": "user", "content": "x" * 400}, {"role": "assistant", "content": "y" * 400},
-           {"role": "user", "content": "Where is my order 1042?"}]
-ctx = assemble_context("You are the store's support assistant.", ["reply in Hindi"],
-                       "Refund for order 1037 resolved last week.", history,
-                       "order 1042", budget=150)
+
+history = [
+    {"role": "user", "content": "x" * 400},
+    {"role": "assistant", "content": "y" * 400},
+    {"role": "user", "content": "Where is my order 1042?"},
+]
+ctx = assemble_context(
+    "You are the store's support assistant.",
+    ["reply in Hindi"],
+    "Refund for order 1037 resolved last week.",
+    history,
+    "order 1042",
+    budget=150,
+)
 # oldest dropped
 assert [m["content"] for m in ctx[1:]] == ["y" * 400, "Where is my order 1042?"]
 ```
